@@ -1000,3 +1000,49 @@ function toggleSimonBestScores() {
         container.style.display = 'none';
     }
 }
+
+/*#############################################################################################
+-------------------------------------------Piedra papel tijera--------------------------------------
+###############################################################################################*/
+let pptWins = 0;
+let pptDraws = 0;
+let pptLosses = 0;
+
+function playppt(playerChoice) {
+
+    const choices = ["piedra", "papel", "tijera"];
+    const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+    let result = "";
+
+    if (playerChoice === cpuChoice) {
+        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Empate! 🤝`;
+        pptDraws++;
+    } else if (
+        (playerChoice === "piedra" && cpuChoice === "tijera") ||
+        (playerChoice === "papel" && cpuChoice === "piedra") ||
+        (playerChoice === "tijera" && cpuChoice === "papel")
+    ) {
+        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Ganaste! 🎉`;
+        pptWins++;
+    } else {
+        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. Perdiste 😢`;
+        pptLosses++;
+    }
+
+    document.getElementById("ppt-result").textContent = result;
+    updatepptScoreboard();
+}
+
+function updatepptScoreboard() {
+    document.getElementById("ppt-wins").textContent = pptWins;
+    document.getElementById("ppt-draws").textContent = pptDraws;
+    document.getElementById("ppt-losses").textContent = pptLosses;
+}
+function resetpptScoreboard() {
+    pptWins = 0;
+    pptDraws = 0;
+    pptLosses = 0;
+    updatepptScoreboard();
+}
+
+
