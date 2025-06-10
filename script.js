@@ -1,3 +1,57 @@
+/*#############################################################################################
+----------------------------------------------AUDIO--------------------------------------
+###############################################################################################*/
+
+// Volúmenes generales
+let volumenMusica = 0.5;
+let volumenEfectos = 0.7;
+
+// Objetos de audio
+const sonidos = {
+    // Menú
+    menuMusic: new Audio("sounds/menu-music.mp3"),
+    menuHover: new Audio("sounds/menu-alPasarPorTexto.mp3"),
+    menuClick: new Audio("sounds/menu-clickgame.mp3"),
+
+    // Buscaminas
+    bmBomb: new Audio("sounds/bm-bomb.mp3"),
+    bmDescubrir: new Audio("sounds/bm-descubrir.mp3"),
+    bmFlag: new Audio("sounds/bm-flag.mp3"),
+
+    // Flappy Graffiti
+    fgMusic: new Audio("sounds/fg-music.mp3"),
+    fgSalto: new Audio("sounds/fg-salto.mp3"),
+
+    // Neon Dices
+    ndGiro: new Audio("sounds/nd-girarDados.mp3"),
+    ndCongelar: new Audio("sounds/nd-congelar.mp3"),
+    ndAnotar: new Audio("sounds/nd-anotar.mp3"),
+
+    // Simon Says
+    ss: {
+        red: new Audio("sounds/ss-red.mp3"),
+        green: new Audio("sounds/ss-green.mp3"),
+        blue: new Audio("sounds/ss-blue.mp3"),
+        yellow: new Audio("sounds/ss-yellow.mp3"),
+    },
+
+    // Otros
+    mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3")
+};
+
+// Asignar volúmenes por defecto
+Object.values(sonidos).forEach(s => {
+    if (s instanceof Audio) s.volume = volumenEfectos;
+});
+Object.values(sonidos.ss).forEach(s => s.volume = volumenEfectos);
+sonidos.menuMusic.volume = volumenMusica;
+sonidos.fgMusic.volume = volumenMusica;
+
+
+/*#############################################################################################
+-------------------------------------MENU PRINCIPAL --------------------------------------
+###############################################################################################*/
+
 const mainMenu = document.getElementById('main-menu');
 const gameScreens = document.querySelectorAll('.game-screen');
 const menuOptions = document.querySelectorAll('.menu-option');
@@ -13,8 +67,12 @@ function showMenu() {
 // Event listeners para las opciones del menú
 menuOptions.forEach(option => {
     option.addEventListener('click', () => {
+        sonidos.menuClick.play();
         const target = option.getAttribute('data-target');
         showScreen(target);
+    });
+    option.addEventListener('mouseover', () => {
+        sonidos.menuHover.play();
     });
 });
 
@@ -42,6 +100,25 @@ function showScreen(screenId) {
         displaySimonBestScores();
     }
 }
+
+/*#############################################################################################
+------------------------------------------OPCIONES--------------------------------------
+###############################################################################################*/
+
+document.getElementById('vol-musica').addEventListener('input', (e) => {
+    volumenMusica = parseFloat(e.target.value);
+    sonidos.menuMusic.volume = volumenMusica;
+    sonidos.fgMusic.volume = volumenMusica;
+});
+
+document.getElementById('vol-efectos').addEventListener('input', (e) => {
+    volumenEfectos = parseFloat(e.target.value);
+
+    Object.values(sonidos).forEach(s => {
+        if (s instanceof Audio && s !== sonidos.menuMusic && s !== sonidos.fgMusic) s.volume = volumenEfectos;
+    });
+    Object.values(sonidos.ss).forEach(s => s.volume = volumenEfectos);
+});
 
 /*#############################################################################################
 -------------------------------------JUEGO DE BUSCAMINAS --------------------------------------
@@ -195,6 +272,7 @@ function toggleFlag(cell) {
     if (cell.revealed || gameOver) return;
     cell.flagged = !cell.flagged;
     cell.element.textContent = cell.flagged ? "🚩" : "";
+    sonidos.bmFlag.play();
 }
 
 function revealCell(cell) {
@@ -202,9 +280,11 @@ function revealCell(cell) {
 
     cell.revealed = true;
     cell.element.classList.add("revealed");
+    sonidos.bmDescubrir.play();
 
     if (cell.hasMine) {
         cell.element.textContent = "💣";
+        sonidos.bmBomb.play();
         gameOver = true;
         document.getElementById("game-status").textContent = "💥 Perdiste.";
         revealAllMines();
@@ -344,8 +424,10 @@ function toggleBestTimes() {
     if (container.style.display === 'none' || container.style.display === '') {
         displayBestTimes(); // Llenar la lista si está vacía
         container.style.display = 'block';
+        sonidos.mostrarBestTimes.play();
     } else {
         container.style.display = 'none';
+        sonidos.mostrarBestTimes.play();
     }
 }
 
@@ -373,6 +455,14 @@ function startFlappybird() {
   let animationFrameId;
   let gameStarted = false; // <-- Variable de estado para controlar el inicio
 
+  // Sonidos
+  const musicaFondoFlappy = new Audio("sounds/fg-music.mp3");
+  musicaFondoFlappy.loop = true;
+  musicaFondoFlappy.volume = volumenMusica; // global, si ya lo declaraste
+
+  const sonidoSaltoFlappy = new Audio("sounds/fg-salto.mp3");
+  sonidoSaltoFlappy.volume = volumenEfectos;
+
   function resetGame() {
     bird.y = canvas.height / 2;
     bird.velocity = 0;
@@ -386,6 +476,9 @@ function startFlappybird() {
         cancelAnimationFrame(animationFrameId);
         animationFrameId = null; // Limpiar la ID de la animación
     }
+     // DETENER música si se reinicia
+    musicaFondoFlappy.pause();
+    musicaFondoFlappy.currentTime = 0;
     draw(); // Dibuja el estado inicial (pájaro quieto)
   }
 
@@ -499,6 +592,9 @@ function startFlappybird() {
     cancelAnimationFrame(animationFrameId); // Detiene el bucle de animación
     animationFrameId = null; // Asegura que no haya ID de animación activa
 
+    musicaFondoFlappy.pause();
+    musicaFondoFlappy.currentTime = 0;
+
     if (score > bestFlappyScore) {
       bestFlappyScore = score;
       localStorage.setItem('bestFlappyScore', bestFlappyScore);
@@ -521,8 +617,11 @@ function startFlappybird() {
         gameStarted = true;
         loop(); // Inicia el bucle de juego
         bird.velocity = jumpForce; // Y el primer salto
+        musicaFondoFlappy.play(); // música comienza
       } else if (!gameOver) {
         bird.velocity = jumpForce;
+        sonidoSaltoFlappy.currentTime = 0;
+        sonidoSaltoFlappy.play(); // salto
       }
     }
   });
@@ -532,14 +631,15 @@ function startFlappybird() {
       gameStarted = true;
       loop(); // Inicia el bucle de juego
       bird.velocity = jumpForce; // Y el primer salto
+      musicaFondoFlappy.play(); // música comienza
     } else if (!gameOver) {
       bird.velocity = jumpForce;
+      sonidoSaltoFlappy.currentTime = 0;
+      sonidoSaltoFlappy.play(); // salto
     }
-    // ¡IMPORTANTE! Eliminado: else { resetGame(); }
-    // El juego no se reinicia con un clic después de perder.
   });
 
-  resetGame(); // Llama a resetGame una vez para dibujar el pájaro inicial quieto
+  resetGame();
 }
 
 function restartFlappybird() {
@@ -557,6 +657,8 @@ let rollCount = 0;
 let turnEnded = false;
 
 function rollDice() {
+    sonidos.ndGiro.currentTime = 0;
+    sonidos.ndGiro.play();
     if (rollCount >= 3 || turnEnded) {
         alert("¡Debes elegir una casilla antes de continuar!");
         return;
@@ -589,6 +691,8 @@ function rollDice() {
 
 function toggleFreeze(index) {
     frozen[index] = !frozen[index];
+    sonidos.ndCongelar.currentTime = 0;
+    sonidos.ndCongelar.play()
     const el = document.getElementById(`d${index + 1}`);
     if (frozen[index]) {
         el.style.backgroundColor = "#ccfaff"; // color hielo
@@ -615,7 +719,7 @@ document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
             alert("Esta casilla ya está usada.");
             return;
         }
-
+        sonidos.ndAnotar.play()
         const score = calculateScore(td.previousSibling.textContent.trim());
         td.textContent = score;
         turnEnded = true;
@@ -743,10 +847,11 @@ function toggleNeonScores() {
                 list.appendChild(li);
             });
         }
-
+        sonidos.mostrarBestTimes.play();
         container.style.display = "block";
     } else {
         // Ocultar si ya estaba visible
+        sonidos.mostrarBestTimes.play();
         container.style.display = "none";
     }
 }
@@ -796,10 +901,10 @@ const buttonColors = ["red", "green", "blue", "yellow"];
 
 // Sonidos para el juego
 const sounds = {
-    red: new Audio('sounds/simon_red.mp3'),
-    green: new Audio('sounds/simon_green.mp3'),
-    blue: new Audio('sounds/simon_blue.mp3'),
-    yellow: new Audio('sounds/simon_yellow.mp3')
+    red: new Audio('sounds/ss-red.mp3'),
+    green: new Audio('sounds/ss-green.mp3'),
+    blue: new Audio('sounds/ss-blue.mp3'),
+    yellow: new Audio('sounds/ss-yellow.mp3')
 };
 
 function startSimonSays() {
@@ -873,8 +978,9 @@ function lightUpButton(color) {
     const button = document.getElementById(`simon-${color}`);
     button.style.opacity = '0.6';
     button.style.boxShadow = `0 0 20px ${getNeonColor(color)}`; // Aplica brillo neón
-    if (sounds[color]) {
-        sounds[color].play();
+    if (sonidos.ss[color]) {
+    sonidos.ss[color].currentTime = 0;
+    sonidos.ss[color].play();
     }
 
     setTimeout(() => {
@@ -995,8 +1101,10 @@ function toggleSimonBestScores() {
     const container = document.getElementById('simon-best-scores-container');
     if (container.style.display === 'none' || container.style.display === '') {
         displaySimonBestScores();
+        sonidos.mostrarBestTimes.play();
         container.style.display = 'block';
     } else {
+        sonidos.mostrarBestTimes.play();
         container.style.display = 'none';
     }
 }
@@ -1044,5 +1152,3 @@ function resetpptScoreboard() {
     pptLosses = 0;
     updatepptScoreboard();
 }
-
-
