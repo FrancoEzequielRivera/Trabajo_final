@@ -401,3 +401,142 @@ li.record {
     animation: glow 1s ease-in-out infinite alternate;
 }
 
+/*#############################################################################################
+-------------------------------------------SIMON SAYS-------------------------------------
+###############################################################################################*/
+
+#simon-says {
+    border: 2px solid #00fff7;
+}
+
+#simon-says h1 {
+    color: #FFFFFF;
+    text-shadow: 0 0 10px #00fbff, 0 0 20px #00fbff; 
+}
+
+#simon-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-template-rows: repeat(2, 120px);
+    gap: 10px;
+    margin: 30px auto;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* Hacer el contenedor circular */
+    background-color: rgba(32, 32, 32, 0.805);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.869); /* Sombra neón alrededor del círculo */
+    padding: 20px;
+    position: relative;
+}
+
+.simon-button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.9s, box-shadow 0.2s;
+}
+
+#simon-board {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 10px;
+    width: 210px;
+    height: 210px;
+    margin: 20px auto;
+    border-radius: 50%;
+    background-color: #333;
+    box-shadow: 0 0 20px rgb(0, 247, 255);
+    overflow: hidden;
+    position: relative;
+}
+
+#simon-red {
+    background-color: #f00;
+    border-top-left-radius: 100%;
+}
+
+#simon-green {
+    background-color: #0f0;
+    border-top-Right-radius: 100%; 
+}
+
+#simon-blue {
+    background-color: #00f;
+    border-bottom-left-radius: 100%;
+}
+
+#simon-yellow {
+    background-color: #ff0;
+    border-bottom-right-radius: 100%;
+}
+
+#simon-red.lit {
+    box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000d4; 
+}
+#simon-green.lit {
+    box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00;
+}
+#simon-blue.lit {
+    box-shadow: 0 0 20px #002fff, 0 0 40px #0044ff; 
+}
+#simon-yellow.lit {
+    box-shadow: 0 0 20px #FFFF00, 0 0 40px #FFFF00;
+}
+
+#simon-status, #simon-round {
+    font-size: 1.5em;
+    margin-top: 15px;
+    color: #ffffff;
+    text-shadow: 0 0 20px #d400ff; /* Sombra de texto fucsia */
+}
+
+/* Estilos para el contenedor de récords de Simon Says (similar al de Buscaminas) */
+#simon-best-scores-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+
+    margin-top: 0;
+    border: 1px solid #FFD700;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+}
+
+#simon-best-scores-container h2 {
+    color: #ffffff;
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#simon-best-scores-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#simon-best-scores-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 10px;
+    border-bottom: 1px dotted #FFD700;
+    color: #fff;
+    font-size: 1.1em;
+}
+
+#simon-best-scores-list li:last-child {
+    border-bottom: none;
+}
+
+/* La clase 'record' ya está definida globalmente para el brillo. */
