@@ -1,4 +1,4 @@
-const CACHE_NAME = 'NeonGG-cache-v2'; // Incrementa la versión del caché
+const CACHE_NAME = 'Pweanding-cache-v1'; // Incrementa la versión del caché
 const urlsToCache = [
   './',
   './index.html',
@@ -9,7 +9,23 @@ const urlsToCache = [
   './icon-512.png',
   './f2.jpg',
   './flappy-assets/bird.png',
-  './flappy-assets/bg.png'
+  './flappy-assets/bg.png',
+  './sounds/bm-bomb.mp3',
+  './sounds/bm-descubrir.mp3',
+  './sounds/bm-flag.mp3',
+  './sounds/fg-music.mp3',
+  './sounds/fg-salto.mp3',
+  './sounds/menu-alPasarPorTexto.mp3',
+  './sounds/menu-clickgame.mp3',
+  './sounds/menu-music.mp3',
+  './sounds/mostrarBestTimes.mp3',
+  './sounds/nd-girarDados.mp3',
+  './sounds/nd-congelar.mp3',
+  './sounds/nd-anotar.mp3',
+  './sounds/ss-red.mp3',
+  './sounds/ss-green.mp3',
+  './sounds/ss-blue.mp3',
+  './sounds/ss-yellow.mp3',
 ];
 
 // Instalar el service worker y cachear archivos
