@@ -11,12 +11,13 @@ const sonidos = {
     // Menú
     menuMusic: new Audio("sounds/menu-music.mp3"),
     menuHover: new Audio("sounds/menu-alPasarPorTexto.mp3"),
-    menuClick: new Audio("sounds/menu-clickgame.mp3"),
+    menuClick: new Audio("sounds/menu-select.mp3"),
 
     // Buscaminas
     bmBomb: new Audio("sounds/bm-bomb.mp3"),
     bmDescubrir: new Audio("sounds/bm-descubrir.mp3"),
     bmFlag: new Audio("sounds/bm-flag.mp3"),
+    bmWinGame: new Audio("sounds/bm-winGame.mp3"),
 
     // Flappy Graffiti
     fgMusic: new Audio("sounds/fg-music.mp3"),
@@ -25,6 +26,7 @@ const sonidos = {
     // Neon Dices
     ndGiro: new Audio("sounds/nd-girarDados.mp3"),
     ndCongelar: new Audio("sounds/nd-congelar.mp3"),
+    ndRomper: new Audio("sounds/nd-romper.mp3"),
     ndAnotar: new Audio("sounds/nd-anotar.mp3"),
 
     // Simon Says
@@ -36,7 +38,9 @@ const sonidos = {
     },
 
     // Otros
-    mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3")
+    mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3"),
+    gameOver: new Audio("sounds/gameOver.mp3"),
+    volver: new Audio("sounds/volver.mp3"),
 };
 
 // Asignar volúmenes por defecto
@@ -62,6 +66,7 @@ function showMenu() {
         screen.style.display = 'none';
     });
     mainMenu.style.display = 'block';
+    sonidos.volver.play();
 }
 
 // Event listeners para las opciones del menú
@@ -214,6 +219,7 @@ let bestTimes = JSON.parse(localStorage.getItem('bestTimes')) || []; // Cargar d
 let username = "Anónimo";
 
 function initBuscaminas() {
+    sonidos.volver.play();
     document.getElementById("best-time-input-container").style.display = "none";
     document.getElementById("best-times-container").style.display = "none";
     const boardElement = document.getElementById("minesweeper-board");
@@ -302,6 +308,7 @@ function revealCell(cell) {
 
     // Condición de victoria
     if (revealedCount === rows * cols - totalMines) {
+        sonidos.bmWinGame.play();
         document.getElementById("game-status").textContent = "🎉 ¡Ganaste!";
         gameOver = true;
         stopTimer();
@@ -427,7 +434,7 @@ function toggleBestTimes() {
         sonidos.mostrarBestTimes.play();
     } else {
         container.style.display = 'none';
-        sonidos.mostrarBestTimes.play();
+        sonidos.volver.play();
     }
 }
 
@@ -552,6 +559,7 @@ function startFlappybird() {
         (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)
       ) {
         endGame();
+        sonidos.gameOver.play();
       }
 
       // Puntuación
@@ -567,6 +575,7 @@ function startFlappybird() {
     // Detección de colisiones con el techo o el suelo
     if (bird.y < 0 || bird.y + bird.height > canvas.height) {
       endGame();
+      sonidos.gameOver.play();
     }
   }
 
@@ -643,13 +652,13 @@ function startFlappybird() {
 }
 
 function restartFlappybird() {
+    sonidos.volver.play();
     startFlappybird();
 }
 
 /*#############################################################################################
 -------------------------------------------Neon Dices--------------------------------------
 ###############################################################################################*/
-
 
 let diceValues = [0, 0, 0, 0, 0];
 let frozen = [false, false, false, false, false];
@@ -691,17 +700,19 @@ function rollDice() {
 
 function toggleFreeze(index) {
     frozen[index] = !frozen[index];
-    sonidos.ndCongelar.currentTime = 0;
-    sonidos.ndCongelar.play()
     const el = document.getElementById(`d${index + 1}`);
     if (frozen[index]) {
         el.style.backgroundColor = "#ccfaff"; // color hielo
         el.style.color = "#000"; // texto negro
         el.style.boxShadow = "0 0 15px #99eeff";
+        sonidos.ndCongelar.currentTime = 0;
+        sonidos.ndCongelar.play()
     } else {
         el.style.backgroundColor = "#111";
         el.style.color = "#0ff";
         el.style.boxShadow = "0 0 10px #0ff";
+        sonidos.ndRomper.currentTime = 0;
+        sonidos.ndRomper.play()
     }
 }
 
@@ -851,12 +862,13 @@ function toggleNeonScores() {
         container.style.display = "block";
     } else {
         // Ocultar si ya estaba visible
-        sonidos.mostrarBestTimes.play();
+        sonidos.volver.play();
         container.style.display = "none";
     }
 }
 
 function resetGame() {
+    sonidos.volver.play();
     diceValues = [0, 0, 0, 0, 0];
     frozen = [false, false, false, false, false];
     rollCount = 0;
@@ -930,6 +942,11 @@ function startSimonSays() {
 
     // El juego realmente empieza con la primera ronda cuando el usuario interactúa
     simonStatus.textContent = "Presiona cualquier botón para empezar...";
+}
+
+function restartSimonSays() {
+    sonidos.volver.play();
+    startSimonSays()
 }
 
 function resetSimonButtonStyles() {
@@ -1031,6 +1048,7 @@ function checkSequence() {
 
 function gameOverSimon() {
     canClick = false;
+    sonidos.gameOver.play();
     simonStatus.textContent = `¡Perdiste! Alcanzaste la Ronda: ${round -1}`;
     // Lógica para guardar el récord si es necesario
     handleNewSimonScore(round - 1); // Guarda la ronda anterior como puntuación
@@ -1104,7 +1122,7 @@ function toggleSimonBestScores() {
         sonidos.mostrarBestTimes.play();
         container.style.display = 'block';
     } else {
-        sonidos.mostrarBestTimes.play();
+        sonidos.volver.play();
         container.style.display = 'none';
     }
 }
@@ -1147,6 +1165,7 @@ function updatepptScoreboard() {
     document.getElementById("ppt-losses").textContent = pptLosses;
 }
 function resetpptScoreboard() {
+    sonidos.volver.play();
     pptWins = 0;
     pptDraws = 0;
     pptLosses = 0;
