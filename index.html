@@ -45,12 +45,14 @@
 
             <div id="best-time-input-container" style="display: none; margin-top: 20px;">
                 <p style="color: #ffffff; text-shadow: 0 0 5px #ffea00;">¡Nuevo récord! Ingresa tu nombre:</p>
-                <input type="text" id="best-time-name-input" placeholder="Tu nombre" maxlength="15" style="padding: 8px; border-radius: 5px; border: 1px solid #FFD700; background-color: rgba(0,0,0,0.5); color: #fff;">
+                <input type="text" id="best-time-name-input" placeholder="Tu nombre" maxlength="15" style="padding: 8px;
+                     border-radius: 5px; border: 1px solid #FFD700; background-color: rgba(0,0,0,0.5); color: #fff;">
                 <button id="save-minesweeper-record-btn" style="margin-left: 10px;">Guardar Récord</button>
             </div>
 
             <button onclick="showMenu()">🏠 Volver al Menú</button>
-            <button onclick="toggleBestTimes()">🏆 Ver Mejores Tiempos</button> <button onclick="initBuscaminas()">🔁 Reiniciar</button>
+            <button onclick="toggleBestTimes()">🏆 Ver Mejores Tiempos</button> 
+            <button onclick="initBuscaminas()">🔁 Reiniciar</button>
 
             <div id="best-times-container" style="display: none;">
                 <h2>Mejores Tiempos</h2>
@@ -117,13 +119,15 @@
 
             <div id="simon-best-score-input-container" style="display: none; margin-top: 20px;">
                 <p style="color: #ffffff; text-shadow: 0 0 5px #ffea00;">¡Nuevo récord! Ingresa tu nombre:</p>
-                <input type="text" id="simon-best-score-name-input" placeholder="Tu nombre" maxlength="15" style="padding: 8px; border-radius: 5px; border: 1px solid #FFD700; background-color: rgba(0,0,0,0.5); color: #fff;">
+                <input type="text" id="simon-best-score-name-input" placeholder="Tu nombre" 
+                    maxlength="15" style="padding: 8px; border-radius: 5px; border: 1px solid #FFD700; 
+                    background-color: rgba(0,0,0,0.5); color: #fff;">
                 <button id="save-simon-record-btn" style="margin-left: 10px;">Guardar Récord</button>
             </div>
 
             <button onclick="showMenu()">🏠 Volver al Menú</button>
             <button onclick="toggleSimonBestScores()">🏆 Ver Mejores Puntajes</button>
-            <button onclick="startSimonSays()">🔁 Reiniciar Juego</button>
+            <button onclick="restartSimonSays()">🔁 Reiniciar Juego</button>
 
             <div id="simon-best-scores-container" style="display: none;">
                 <h2>Mejores Rondas</h2>
