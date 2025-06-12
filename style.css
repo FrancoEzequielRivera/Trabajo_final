@@ -310,16 +310,36 @@ li.record {
 #neon-dice-score {
     margin: 20px auto;
     border-collapse: collapse;
-    border: 2px solid #0ff;
-    color: #0ff;
+    border: 2px solid rgb(204, 204, 204);
+    color: rgb(244, 244, 244);
+    text-shadow: 0 0 15px #24dcab;
     font-size: 1.2em;
     width: 300px;
+    box-shadow: 0 0 15px #6f7389;
+    font-family: 'Share Tech Mono', 'Orbitron', 'Rajdhani', monospace;
+
+    background-image: url('images/nd-fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(2px);
+    border-radius: 10px;
 }
 
 #neon-dice-score td {
     border: 1px solid #0ff;
     padding: 8px;
     text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: rgb(194, 194, 194);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    will-change: transform;
+    font-family: inherit;
+}
+
+#neon-dice-score td:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    transform: none;
 }
 
 #dice-container {
@@ -327,6 +347,12 @@ li.record {
     justify-content: center;
     gap: 15px;
     margin-top: 20px;
+}
+
+.scored-cell {
+    color: #000000; /* Cian brillante */
+    text-shadow: 0 0 5px rgb(0, 105, 105), 0 0 10px rgb(0, 159, 159), 0 0 15px rgb(0, 65, 65);
+    font-weight: bold;
 }
 
 .dice {
