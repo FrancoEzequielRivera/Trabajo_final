@@ -546,35 +546,71 @@ li.record {
 ###############################################################################################*/
 
 .ppt-options {
-  display: flex;
-  justify-content: center;
-  gap: 1em;
-  margin-top: 1.5em;
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.5em;
 }
 
 .ppt-options button {
-  padding: 0.6em 1.2em;
-  font-size: 1.1em;
-  font-weight: bold;
-  color: #0ff;
-  background-color: black;
-  border: 2px solid #0ff;
-  border-radius: 8px;
-  cursor: pointer;
-  text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-  box-shadow: 0 0 10px #0ff, 0 0 20px #0ff inset;
-  transition: transform 0.2s;
+    padding: 0.6em 1.2em;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0ff;
+    background-color: black;
+    border: 2px solid #0ff;
+    border-radius: 8px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff inset;
+    transition: transform 0.2s;
 }
 
 .ppt-options button:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px #0ff, 0 0 25px #0ff inset;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #0ff, 0 0 25px #0ff inset;
 }
 
 .ppt-result {
-  margin-top: 1.5em;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #fff;
-  text-shadow: 0 0 5px #fff;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px #fff;
+}
+
+.choice-box {
+    text-align: center;
+}
+
+.emoji-box {
+    font-size: 40px;
+    width: 60px;
+    height: 60px;
+    border: 3px solid #aaa;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+    background-color: #fff;
+}
+
+#ppt-replay button {
+    background-color: #000;
+    color: #0ff;
+    border: 2px solid #0ff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #0ff;
+}
+
+#ppt-replay button:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff;
 }
