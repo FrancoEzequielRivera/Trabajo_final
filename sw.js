@@ -29,6 +29,9 @@ const urlsToCache = [
   './sounds/ss-green.mp3',
   './sounds/ss-blue.mp3',
   './sounds/ss-yellow.mp3',
+  './sounds/winPPT.mp3',
+  './sounds/losePPT.mp3',
+  './sounds/cuackPPT.mp3',
 ];
 
 // Instalar el service worker y cachear archivos
