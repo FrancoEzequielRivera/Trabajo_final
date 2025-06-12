@@ -1,464 +1,283 @@
-/*#############################################################################################
-----------------------------------------------AUDIO--------------------------------------
-###############################################################################################*/
-
-// Volúmenes generales
-let volumenMusica = 0.5;
-let volumenEfectos = 0.7;
-
-// Objetos de audio
-const sonidos = {
-    // Menú
-    menuMusic: new Audio("sounds/menu-music.mp3"),
-    menuHover: new Audio("sounds/menu-alPasarPorTexto.mp3"),
-    menuClick: new Audio("sounds/menu-select.mp3"),
-
-    // Buscaminas
-    bmBomb: new Audio("sounds/bm-bomb.mp3"),
-    bmDescubrir: new Audio("sounds/bm-descubrir.mp3"),
-    bmFlag: new Audio("sounds/bm-flag.mp3"),
-    bmWinGame: new Audio("sounds/bm-winGame.mp3"),
-
-    // Flappy Graffiti
-    fgMusic: new Audio("sounds/fg-music.mp3"),
-    fgSalto: new Audio("sounds/fg-salto.mp3"),
-
-    // Neon Dices
-    ndGiro: new Audio("sounds/nd-girarDados.mp3"),
-    ndCongelar: new Audio("sounds/nd-congelar.mp3"),
-    ndRomper: new Audio("sounds/nd-romper.mp3"),
-    ndAnotar: new Audio("sounds/nd-anotar.mp3"),
-
-    // Simon Says
-    ss: {
-        red: new Audio("sounds/ss-red.mp3"),
-        green: new Audio("sounds/ss-green.mp3"),
-        blue: new Audio("sounds/ss-blue.mp3"),
-        yellow: new Audio("sounds/ss-yellow.mp3"),
-    },
-
-
-    // Piedra papel tijera
-    pptWin: new Audio("sounds/winPPT.mp3"),
-    pptLose: new Audio("sounds/losePPT.mp3"),
-    pptDraw: new Audio("sounds/cuackPPT.mp3"),
-
+/* Estilo base inicial para nuestro proyecto */
+body {
+    font-family: "Bangers", cursive;
+    /* Nuevas propiedades para el fondo de toda la página */
+    background-image: url('images/f2.jpg');
+    background-size: cover; /* Cubre todo el viewport */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #000000; /* Color de respaldo si la imagen no carga */
+    filter: brightness(1.2) contrast(1.1); /* Ejemplo de filtro para hacerlo más vibrante */
+    /* Ejemplo de modo de mezcla si tienes un background-color para mezclar */
     
-    // Otros
-    mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3"),
-    gameOver: new Audio("sounds/gameOver.mp3"),
-    volver: new Audio("sounds/volver.mp3"),
-    sonidoSlider: new Audio("sounds/pruebaSonido.mp3"),
-};
-
-// Asignar volúmenes por defecto
-Object.values(sonidos).forEach(s => {
-    if (s instanceof Audio) s.volume = volumenEfectos;
-});
-Object.values(sonidos.ss).forEach(s => s.volume = volumenEfectos);
-sonidos.menuMusic.volume = volumenMusica;
-sonidos.fgMusic.volume = volumenMusica;
-sonidos.sonidoSlider.volume = volumenEfectos;
-
-function playSliderSound() {
-    if (sonidos && sonidos.sonidoSlider) { 
-        sonidos.sonidoSlider.currentTime = 0;
-        sonidos.fgMusic.pause(); 
-        sonidos.sonidoSlider.play();
-    }
+    color: #fff;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden; /* Mantiene la barra de desplazamiento oculta si no es necesaria */
 }
 
-function playSliderMSound() {
-    if (sonidos && sonidos.sonidoSlider) { 
-        sonidos.sonidoSlider.currentTime = 0; 
-        sonidos.fgMusic.play();
-    }
+#game-container {
+    text-align: center;
 }
 
-/*#############################################################################################
--------------------------------------MENU PRINCIPAL --------------------------------------
-###############################################################################################*/
-
-const mainMenu = document.getElementById('main-menu');
-const gameScreens = document.querySelectorAll('.game-screen');
-const menuOptions = document.querySelectorAll('.menu-option');
-
-// Función para mostrar el menú principal
-function showMenu() {
-    gameScreens.forEach(screen => {
-        screen.style.display = 'none';
-    });
-    mainMenu.style.display = 'block';
-    sonidos.fgMusic.pause();
-    sonidos.volver.play();
+.game-screen {
+    display: none;
+    padding: 20px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
-// Event listeners para las opciones del menú
-menuOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        sonidos.menuClick.play();
-        const target = option.getAttribute('data-target');
-        showScreen(target);
-    });
-    option.addEventListener('mouseover', () => {
-        sonidos.menuHover.play();
-    });
-});
-
-// Mostrar el menú principal al cargar la página
-showMenu();
-
-// Llamar al iniciar pantalla de un juego
-function showScreen(screenId) {
-    gameScreens.forEach(screen => {
-        screen.style.display = 'none';
-    });
-    const targetScreen = document.getElementById(screenId);
-    targetScreen.style.display = 'block';
-    mainMenu.style.display = 'none';
-
-    if (screenId === 'buscaminas') {
-        initBuscaminas();
-        displayBestTimes();
-    } else if (screenId === 'flappybird') {
-        startFlappybird();
-    } else if (screenId === 'Neon Dices'){
-        startNeonDices();
-    } else if (screenId === 'simon-says') { 
-        startSimonSays();
-        displaySimonBestScores();
-    }
+#main-menu {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border: 2px solid #b700ff; 
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(128, 0, 255, 0.5);
+    width: 98%;
+    margin: 0 auto;
 }
 
-/*#############################################################################################
-------------------------------------------OPCIONES--------------------------------------
-###############################################################################################*/
+#main-menu h1 {
+    font-size: 3em;
+    margin-bottom: 30px; 
+    text-shadow: 0 0 10px rgb(225, 0, 255), 0 0 20px rgb(174, 0, 255), 0 0 30px rgb(212, 0, 255);
+}
 
-document.getElementById('vol-musica').addEventListener('input', (e) => {
-    volumenMusica = parseFloat(e.target.value);
-    sonidos.menuMusic.volume = volumenMusica;
-    sonidos.fgMusic.volume = volumenMusica;
-});
+.menu-option {
+    font-size: 2em;
+    padding: 10px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out; 
+    color: #fff; 
+    text-shadow: none; 
+}
 
-document.getElementById('vol-efectos').addEventListener('input', (e) => {
-    volumenEfectos = parseFloat(e.target.value);
 
-    Object.values(sonidos).forEach(s => {
-        if (s instanceof Audio && s !== sonidos.menuMusic && s !== sonidos.fgMusic) s.volume = volumenEfectos;
-    });
-    Object.values(sonidos.ss).forEach(s => s.volume = volumenEfectos);
-});
+.menu-option span {
+    display: block;
+    position: relative;
+    z-index: 2; 
+    transition: transform 0.5s ease-in-out;
+}
+
+.menu-option::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 255, 0.2); /* Fondo semi-transparente morado para el efecto inicial */
+    opacity: 0; /* Inicia invisible */
+    transition: opacity 0.3s ease-in-out; /* Transición para la opacidad */
+    z-index: 1;
+    /* mix-blend-mode: overlay; */ /* Puedes probar con overlay si te gusta un efecto sutil, pero si causa problemas, quítalo */
+    transform: scaleX(0); /* Empieza sin ancho */
+    transform-origin: left;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-in-out;
+}
+
+.menu-option:hover {
+    color: #ffcbfa; /* Mantén el texto blanco o cambia a un color específico para el hover */
+    text-shadow: 0 0 10px rgb(255, 0, 251), 0 0 20px rgb(255, 0, 251); /* Neón morado intenso */
+}
+
+.menu-option:hover span {
+    transform: scale(1.05); 
+}
+
+
+/* Estilos para los botones" */
+button {
+    background-color: #000;
+    color: #0ff;
+    border: 2px solid #0ff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #0ff;
+}
+
+button:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff;
+}
+
 
 /*#############################################################################################
 -------------------------------------JUEGO DE BUSCAMINAS --------------------------------------
 ###############################################################################################*/
 
-function startBuscaminas(rows = 10, cols = 10, mines = 10) {
-    const container = document.getElementById('minesweeper');
-    container.innerHTML = '';
-    container.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
-
-    const grid = [];
-    const minePositions = new Set();
-
-    // Generar minas en posiciones aleatorias
-    while (minePositions.size < mines) {
-        minePositions.add(Math.floor(Math.random() * rows * cols));
-    }
-
-    // Crear celdas
-    for (let i = 0; i < rows * cols; i++) {
-        const cell = document.createElement('div');
-        cell.classList.add('cell');
-        cell.dataset.index = i;
-        container.appendChild(cell);
-        grid.push(cell);
-
-        cell.addEventListener('click', () => revealCell(i));
-    }
-
-    function revealCell(index) {
-        const cell = grid[index];
-        if (cell.classList.contains('revealed')) return;
-
-        cell.classList.add('revealed');
-
-        if (minePositions.has(index)) {
-            cell.textContent = '💣';
-            cell.classList.add('mine');
-            alert('¡Boom! Perdiste.');
-            revealAll();
-        } else {
-            const neighbors = getNeighbors(index);
-            const mineCount = neighbors.filter(i => minePositions.has(i)).length;
-            if (mineCount > 0) {
-                cell.textContent = mineCount;
-            } else {
-                neighbors.forEach(revealCell);
-            }
-        }
-    }
-
-    function revealAll() {
-        minePositions.forEach(index => {
-            const cell = grid[index];
-            cell.textContent = '💣';
-            cell.classList.add('mine');
-            cell.classList.add('revealed');
-        });
-    }
-
-    function getNeighbors(index) {
-        const res = [];
-        const row = Math.floor(index / cols);
-        const col = index % cols;
-
-        for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-                if (dr === 0 && dc === 0) continue;
-                const r = row + dr;
-                const c = col + dc;
-                if (r >= 0 && r < rows && c >= 0 && c < cols) {
-                    res.push(r * cols + c);
-                }
-            }
-        }
-        return res;
-    }
+#buscaminas {
+    border: 2px solid #00FFFF;
 }
 
-// VARIABLES:
-const rows = 8;
-const cols = 8;
-const totalMines = 10;
-let board = [];
-let revealedCount = 0;
-let gameOver = false;
-// variables para el temporizador
-let timerInterval;
-let seconds = 0;
-// variables para calcular los mejores tiempos
-const MAX_BEST_TIMES = 5;
-let bestTimes = JSON.parse(localStorage.getItem('bestTimes')) || []; // Cargar desde localStorage
-let username = "Anónimo";
-
-function initBuscaminas() {
-    sonidos.volver.play();
-    document.getElementById("best-time-input-container").style.display = "none";
-    document.getElementById("best-times-container").style.display = "none";
-    const boardElement = document.getElementById("minesweeper-board");
-    boardElement.innerHTML = "";
-    boardElement.style.display = "grid";
-    boardElement.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
-    boardElement.style.gap = "2px";
-
-    board = [];
-    revealedCount = 0;
-    gameOver = false;
-    document.getElementById("game-status").textContent = "";
-
-    // Inicializar celdas
-    for (let r = 0; r < rows; r++) {
-        const row = [];
-        for (let c = 0; c < cols; c++) {
-            const cell = {
-                hasMine: false,
-                revealed: false,
-                flagged: false,
-                element: document.createElement("div"),
-                row: r,
-                col: c
-            };
-
-            cell.element.className = "cell";
-            cell.element.addEventListener("click", () => revealCell(cell));
-            cell.element.addEventListener("contextmenu", (e) => {
-                e.preventDefault();
-                toggleFlag(cell);
-            });
-            boardElement.appendChild(cell.element);
-            row.push(cell);
-        }
-        board.push(row);
-    }
-
-    // Colocar minas aleatoriamente
-    let placed = 0;
-    while (placed < totalMines) {
-        const r = Math.floor(Math.random() * rows);
-        const c = Math.floor(Math.random() * cols);
-        if (!board[r][c].hasMine) {
-            board[r][c].hasMine = true;
-            placed++;
-        }
-    }
-
-    seconds = 0;
-    updateTimerDisplay();
-    startTimer();
+#buscaminas h1 {
+    color: #FFFFFF; 
+    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; 
 }
 
-function toggleFlag(cell) {
-    if (cell.revealed || gameOver) return;
-    cell.flagged = !cell.flagged;
-    cell.element.textContent = cell.flagged ? "🚩" : "";
-    sonidos.bmFlag.play();
+#minesweeper-board {
+    margin: 20px auto; 
+    max-width: fit-content;
+    border: 2px solid #00eeff; 
+    box-shadow: 0 0 15px rgba(254, 255, 254, 0.7); 
 }
 
-function revealCell(cell) {
-    if (cell.revealed || cell.flagged || gameOver) return;
+.cell { /* Reglas consolidadas para las celdas  */
+    width: 30px;
+    height: 30px;
+    background-color: #111;
+    color: #0ff; /* Color de los números */
+    font-size: 1.2em; 
+    text-align: center;
+    line-height: 30px; 
+    font-weight: bold;
+    border: 1px solid #0ff;
+    cursor: pointer;
+    user-select: none; 
+    transition: background-color 0.2s;
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
 
-    cell.revealed = true;
-    cell.element.classList.add("revealed");
-    sonidos.bmDescubrir.play();
+.cell:hover:not(.revealed) {
+    background-color: #222; 
+}
 
-    if (cell.hasMine) {
-        cell.element.textContent = "💣";
-        sonidos.bmBomb.play();
-        gameOver = true;
-        document.getElementById("game-status").textContent = "💥 Perdiste.";
-        revealAllMines();
-        stopTimer();
-        return;
+.cell.revealed {
+    background-color: #333;
+    cursor: default;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5); /* sombra interna para profundidad */
+}
+
+.cell.mine { 
+    background-color: red;
+    color: white; /* Aseguro que la mina sea visible */
+}
+
+
+/* Estilos para el estado del juego y el temporizador */
+#game-status {
+    font-size: 1.8em;
+    margin-top: 15px;
+    color: #ffffff;
+    text-shadow: 0 0 10px #00e1ff;
+}
+
+#timer {
+    font-size: 1.4em;
+    margin-top: 10px;
+    color: #ffffff; 
+    text-shadow: 0 0 8px #757575;
+}
+
+/* Estilos para la lista de récords (Contenedor general) */
+#best-times-container { 
+    position: absolute; 
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 100; 
+
+    margin-top: 0;
+    border: 1px solid #FFD700;
+    padding: 20px; 
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9); 
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px; 
+    text-align: left;
+}
+
+#best-times-container h2 { 
+    color: #ffffff; 
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Estilos para la lista UL de mejores tiempos de Buscaminas */
+#minesweeper-best-times-list { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0;
+}
+
+#minesweeper-best-times-list li {
+    display: flex; 
+    justify-content: space-between;
+    align-items: baseline; 
+    padding: 5px 10px; 
+    border-bottom: 1px dotted #FFD700;
+    color: #fff; 
+    font-size: 1.1em;
+}
+
+#minesweeper-best-times-list li:last-child {
+    border-bottom: none; /* Eliminar la línea del último elemento */
+}
+
+li.record {
+    color: #ff0; 
+    font-weight: bold;
+    animation: glow 1s ease-in-out infinite alternate; /* Animación de brillo */
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #ff0, 0 0 10px #ff0;
     }
-
-    revealedCount++;
-    const minesAround = countMinesAround(cell.row, cell.col);
-    if (minesAround > 0) {
-        cell.element.textContent = minesAround;
-    } else {
-        getNeighbors(cell.row, cell.col).forEach(neigh => revealCell(neigh));
-    }
-
-    // Condición de victoria
-    if (revealedCount === rows * cols - totalMines) {
-        sonidos.bmWinGame.play();
-        document.getElementById("game-status").textContent = "🎉 ¡Ganaste!";
-        gameOver = true;
-        stopTimer();
-        handleNewBestTime(seconds);
+    to {
+        text-shadow: 0 0 20px #ff0, 0 0 30px #ff0;
     }
 }
 
-function revealAllMines() {
-    board.flat().forEach(cell => {
-        if (cell.hasMine) {
-            cell.element.textContent = "💣";
-        }
-    });
+/* Estilos para el botón de reintentar */
+#retry-button {
+    background-color: #000;
+    color: #0ff;
+    border: 2px solid #0ff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #0ff;
+    margin-top: 10px;
 }
 
-function countMinesAround(r, c) {
-    return getNeighbors(r, c).filter(n => n.hasMine).length;
+#retry-button:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff;
 }
 
-function getNeighbors(r, c) {
-    const directions = [-1, 0, 1];
-    const neighbors = [];
-
-    directions.forEach(dr => {
-        directions.forEach(dc => {
-            if (dr === 0 && dc === 0) return;
-            const nr = r + dr, nc = c + dc;
-            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
-                neighbors.push(board[nr][nc]);
-            }
-        });
-    });
-
-    return neighbors;
+li.record {
+    color: #ff0;
+    font-weight: bold;
+    animation: glow 1s ease-in-out infinite alternate;
 }
 
-function startTimer() {
-    timerInterval = setInterval(() => {
-    seconds++;
-    updateTimerDisplay();
-    }, 1000);
-}
-  
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-   
-function updateTimerDisplay() {
-    document.getElementById('timer').textContent = `Tiempo: ${seconds} segundos`;
-}
-
- 
-// Función para manejar un nuevo récord de Buscaminas
-function handleNewBestTime(newTime) {
-    // Muestra el input para el nombre
-    const bestTimeInputContainer = document.getElementById('best-time-input-container');
-    bestTimeInputContainer.style.display = 'block';
-
-    const bestTimeNameInput = document.getElementById('best-time-name-input');
-    bestTimeNameInput.value = localStorage.getItem('lastUsername') || "Anónimo"; // Sugiere el último nombre usado
-    bestTimeNameInput.focus();
-
-    // Guardar el tiempo y el nombre cuando el usuario haga clic en "Guardar Récord"
-    const saveRecordBtn = document.getElementById('save-minesweeper-record-btn');
-    saveRecordBtn.onclick = () => {
-        const enteredName = bestTimeNameInput.value.trim();
-        username = enteredName || "Anónimo"; // Usa el nombre ingresado o "Anónimo"
-        localStorage.setItem('lastUsername', username); // Guarda el último nombre para futuras sugerencias
-
-        // Actualiza los mejores tiempos con el nombre
-        updateBestTimesInternal(newTime, username);
-
-        bestTimeInputContainer.style.display = 'none'; // Oculta el input
-        displayBestTimes(); // Actualiza la lista de récords para mostrar el nuevo
-    };
-}
-
-// Función interna para actualizar los mejores tiempos
-function updateBestTimesInternal(newTime, user) {
-    let bestTimes = JSON.parse(localStorage.getItem('minesweeperBestTimes')) || []; 
-    bestTimes.push({ time: newTime, user: user }); // Guarda el tiempo y el usuario
-    bestTimes.sort((a, b) => a.time - b.time); // Ordena por tiempo
-
-    if (bestTimes.length > MAX_BEST_TIMES) {
-        bestTimes = bestTimes.slice(0, MAX_BEST_TIMES);
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #ff0, 0 0 10px #ff0;
     }
-    localStorage.setItem('minesweeperBestTimes', JSON.stringify(bestTimes)); // Guarda la lista actualizada
-}
- 
-function displayBestTimes() {
-    const bestTimes = JSON.parse(localStorage.getItem('minesweeperBestTimes')) || []; // Carga desde la clave específica
-    const bestTimesList = document.getElementById('minesweeper-best-times-list');
-    bestTimesList.innerHTML = ''; // Limpiar la lista
-
-    if (bestTimes.length === 0) {
-        bestTimesList.innerHTML = '<li>No hay récords aún.</li>';
-    } else {
-          bestTimes.forEach((record, index) => {
-                const listItem = document.createElement('li');
-
-                const rankAndName = document.createElement('span');
-                rankAndName.textContent = `${index + 1}. ${record.user}`;
-
-                const timeValue = document.createElement('span');
-                timeValue.textContent = `${record.time} segundos`;
-
-                listItem.appendChild(rankAndName);
-                listItem.appendChild(timeValue); // Asegura que haya dos elementos hijos en el <li>
-
-                if (index === 0) {
-                    listItem.classList.add('record');
-                }
-                bestTimesList.appendChild(listItem);
-            });
-    }
-}
-
-function toggleBestTimes() {
-    const container = document.getElementById('best-times-container');
-    if (container.style.display === 'none' || container.style.display === '') {
-        displayBestTimes(); // Llenar la lista si está vacía
-        container.style.display = 'block';
-        sonidos.mostrarBestTimes.play();
-    } else {
-        container.style.display = 'none';
-        sonidos.volver.play();
+    to {
+        text-shadow: 0 0 20px #ff0, 0 0 30px #ff0;
     }
 }
 
@@ -466,847 +285,681 @@ function toggleBestTimes() {
 -------------------------------------FLAPPY GRAFFITI--------------------------------------
 ###############################################################################################*/
 
-function startFlappybird() {
-  const birdImage = new Image();
-  birdImage.src = "images/fg-flappy.png";
-
-  const pipeImage = new Image();
-  pipeImage.src = "images/fg-viga.png";
-
-  const canvas = document.getElementById("flappy-canvas");
-  const ctx = canvas.getContext("2d");
-
-  const gravity = 0.6;
-  const jumpForce = -10;
-  const pipeSpeed = 2;
-  const pipeIntervalFrames = 120;
-  const gap = 140;
-  const birdSize = 35;
-
-  let bird = { x: 50, y: canvas.height / 2, velocity: 0, width: birdSize, height: birdSize };
-  let pipes = [];
-  let score = 0;
-  let bestFlappyScore = parseInt(localStorage.getItem('bestFlappyScore')) || 0;
-  let frameCount = 0;
-  let gameOver = false;
-  let animationFrameId;
-  let gameStarted = false; // <-- Variable de estado para controlar el inicio
-
-  // Sonidos
-  const musicaFondoFlappy = new Audio("sounds/fg-music.mp3");
-  musicaFondoFlappy.loop = true;
-  musicaFondoFlappy.volume = volumenMusica; // global, si ya lo declaraste
-
-  const sonidoSaltoFlappy = new Audio("sounds/fg-salto.mp3");
-  sonidoSaltoFlappy.volume = volumenEfectos;
-
-  function resetGame() {
-    bird.y = canvas.height / 2;
-    bird.velocity = 0;
-    pipes = [];
-    score = 0;
-    frameCount = 0;
-    gameOver = false;
-    gameStarted = false; // Reiniciar el estado de inicio del juego
-    // Asegurarse de que cualquier animación previa esté cancelada al resetear
-    if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = null; // Limpiar la ID de la animación
-    }
-     // DETENER música si se reinicia
-    musicaFondoFlappy.pause();
-    musicaFondoFlappy.currentTime = 0;
-    draw(); // Dibuja el estado inicial (pájaro quieto)
-  }
-
-  function drawBird() {
-  ctx.save();
-  ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
-  const angle = Math.min(Math.PI / 8, bird.velocity / 20); // inclinación hacia abajo
-  ctx.rotate(angle);
-  ctx.drawImage(birdImage, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
-  ctx.restore();
+#flappybird {
+    border: 2px solid #00FFFF; /* Borde cian para Flappy Graffiti */
 }
 
-  function drawPipes() {
-  if (!pipeImage.complete) return;
-
-  const capHeight = 40; // altura fija de la cabeza (desde abajo de la imagen)
-  const bodyHeight = pipeImage.height - capHeight;
-
-  pipes.forEach(pipe => {
-    // 🔼 TUBO SUPERIOR (de cabeza)
-    const topPipeHeight = pipe.top;
-
-    const stretchTop = topPipeHeight - capHeight;
-    if (stretchTop > 0) {
-      // Parte estirable (cuerpo del tubo)
-      ctx.save();
-      ctx.translate(pipe.x, pipe.top);
-      ctx.scale(1, -1);
-      ctx.drawImage(
-        pipeImage,
-        0, 0, pipeImage.width, bodyHeight,      // Parte superior de la imagen
-        0, 0, pipe.width, stretchTop            // Estira hacia abajo
-      );
-      ctx.restore();
-    }
-
-    // 🔽 TUBO INFERIOR (normal)
-    const bottomPipeY = canvas.height - pipe.bottom;
-    const stretchBottom = pipe.bottom - capHeight;
-
-    if (stretchBottom > 0) {
-      // Parte estirable (cuerpo)
-      ctx.drawImage(
-        pipeImage,
-        0, 0, pipeImage.width, bodyHeight,
-        pipe.x, bottomPipeY, pipe.width, stretchBottom
-      );
-    }
-
-    // Parte decorativa (cabeza)
-    ctx.drawImage(
-      pipeImage,
-      0, bodyHeight, pipeImage.width, capHeight,
-      pipe.x, bottomPipeY + stretchBottom, pipe.width, capHeight
-    );
-  });
-}
-
-  function drawScore() {
-      ctx.save();
-      ctx.font = "25px 'Courier New'";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = 2;
-      ctx.fillStyle = "#FFFF00";
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = "black";
-      ctx.strokeText(`Puntaje: ${score}`, 10, 30);
-      ctx.fillText(`Puntaje: ${score}`, 10, 30);
-      ctx.strokeText(`🏆 Récord: ${bestFlappyScore}`, 10, 60);
-      ctx.fillText(`🏆 Récord: ${bestFlappyScore}`, 10, 60);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-  }
-
-  function update() {
-    if (gameOver || !gameStarted) return; // Solo actualiza si el juego ha comenzado y no ha terminado
-
-    frameCount++;
-    bird.velocity += gravity;
-    bird.y += bird.velocity;
-
-    // Generación y movimiento de tuberías
-    if (frameCount % pipeIntervalFrames === 0) {
-      const minPipeHeight = 40;
-      const maxPipeHeight = canvas.height - gap - minPipeHeight;
-      const topPipeHeight = Math.floor(Math.random() * (maxPipeHeight - minPipeHeight + 1)) + minPipeHeight;
-      const bottomPipeHeight = canvas.height - topPipeHeight - gap;
-
-      pipes.push({
-        x: canvas.width,
-        width: 60,
-        top: topPipeHeight,
-        bottom: bottomPipeHeight,
-        scored: false
-      });
-    }
-
-    pipes.forEach(pipe => {
-      pipe.x -= pipeSpeed;
-
-      // Detección de colisiones con tuberías
-      if (
-        bird.x < pipe.x + pipe.width &&
-        bird.x + bird.width > pipe.x &&
-        (bird.y < pipe.top || bird.y + bird.height > canvas.height - pipe.bottom)
-      ) {
-        endGame();
-        sonidos.gameOver.play();
-      }
-
-      // Puntuación
-      if (!pipe.scored && pipe.x + pipe.width < bird.x) {
-        score++;
-        pipe.scored = true;
-      }
-    });
-
-    // Eliminar tuberías fuera de la pantalla
-    pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
-
-    // Detección de colisiones con el techo o el suelo
-    if (bird.y < 0 || bird.y + bird.height > canvas.height) {
-      endGame();
-      sonidos.gameOver.play();
-    }
-  }
-
-  function draw() {
-    ctx.fillStyle = "#000000"; // fondo negro
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    drawBird();
-    drawPipes();
-    drawScore();
-  }
-
-  function loop() {
-    update();
-    draw();
-    if (!gameOver) {
-      animationFrameId = requestAnimationFrame(loop);
-    }
-  }
-
-  function endGame() {
-    gameOver = true;
-    cancelAnimationFrame(animationFrameId); // Detiene el bucle de animación
-    animationFrameId = null; // Asegura que no haya ID de animación activa
-
-    musicaFondoFlappy.pause();
-    musicaFondoFlappy.currentTime = 0;
-
-    if (score > bestFlappyScore) {
-      bestFlappyScore = score;
-      localStorage.setItem('bestFlappyScore', bestFlappyScore);
-    }
-
-    ctx.fillStyle = "#FF00FF"; // fucsia
-    ctx.font = "22px 'Courier New'";
-    ctx.shadowBlur = 10;
-    ctx.shadowColor = "#FF00FF";
-    ctx.fillText(`💥 Perdiste. Puntaje final: ${score}`, 30, canvas.height / 2);
-    ctx.fillText(`🏆 Récord: ${bestFlappyScore}`, 30, canvas.height / 2 + 40);
-    ctx.shadowBlur = 0;
-    // ¡IMPORTANTE! Eliminado: resetGame();
-    // El juego no se reinicia automáticamente aquí.
-  }
-
-  document.addEventListener("keydown", e => {
-    if (e.code === "Space") {
-      if (!gameStarted) {
-        gameStarted = true;
-        loop(); // Inicia el bucle de juego
-        bird.velocity = jumpForce; // Y el primer salto
-        musicaFondoFlappy.play(); // música comienza
-      } else if (!gameOver) {
-        bird.velocity = jumpForce;
-        sonidoSaltoFlappy.currentTime = 0;
-        sonidoSaltoFlappy.play(); // salto
-      }
-    }
-  });
-
-  canvas.addEventListener("click", () => {
-    if (!gameStarted) {
-      gameStarted = true;
-      loop(); // Inicia el bucle de juego
-      bird.velocity = jumpForce; // Y el primer salto
-      musicaFondoFlappy.play(); // música comienza
-    } else if (!gameOver) {
-      bird.velocity = jumpForce;
-      sonidoSaltoFlappy.currentTime = 0;
-      sonidoSaltoFlappy.play(); // salto
-    }
-  });
-
-  resetGame();
-}
-
-function restartFlappybird() {
-    sonidos.volver.play();
-    startFlappybird();
+#flappybird h1 {
+    color: #FFFFFF; /* Texto blanco */
+    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; /* Sombra cian */
 }
 
 /*#############################################################################################
--------------------------------------------Neon Dices--------------------------------------
+-------------------------------------Neon Dices--------------------------------------
 ###############################################################################################*/
 
-let diceValues = [0, 0, 0, 0, 0];
-let frozen = [false, false, false, false, false];
-let rollCount = 0;
-let turnEnded = false;
-const MAX_NEON_SCORES = 5;
-const ndMessageContainer = document.getElementById('nd-message-container');
-const ndMessageText = document.getElementById('nd-message-text');
-const ndMessageCloseBtn = document.getElementById('nd-message-close-btn');
-
-// Listener para el botón de cerrar el mensaje flotante
-if (ndMessageCloseBtn) {
-    ndMessageCloseBtn.addEventListener('click', () => {
-        sonidos.volver.play(); 
-        ndMessageContainer.style.display = 'none';
-        resetGame(); 
-    });
+#neon-dices {
+    border: 2px solid #00FFFF; /* Borde cian para Neon Dices */
 }
 
-function rollDice() {
-    if (rollCount >= 3 || turnEnded) {
-        return;
-    }
-
-    const diceElements = [1, 2, 3, 4, 5].map(i => document.getElementById(`d${i}`));
-
-    diceElements.forEach((el, index) => {
-        if (frozen[index]) return;
-
-        let count = 0;
-        const interval = setInterval(() => {
-            const temp = Math.floor(Math.random() * 6) + 1;
-            el.textContent = temp;
-            count++;
-            if (count > 10) {
-                clearInterval(interval);
-                const finalValue = Math.floor(Math.random() * 6) + 1;
-                el.textContent = finalValue;
-                diceValues[index] = finalValue;
-            }
-        }, 50);
-    });
-
-    sonidos.ndGiro.currentTime = 0;
-    sonidos.ndGiro.play();
-    rollCount++;
-    if (rollCount === 3) {
-    }
+#neon-dices h1 {
+    color: #FFFFFF; /* Texto blanco */
+    text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF; /* Sombra cian */
 }
 
-function toggleFreeze(index) {
-    frozen[index] = !frozen[index];
-    const el = document.getElementById(`d${index + 1}`);
-    if (frozen[index]) {
-        el.style.backgroundColor = "#ccfaff"; // color hielo
-        el.style.color = "#000"; // texto negro
-        el.style.boxShadow = "0 0 15px #99eeff";
-        sonidos.ndCongelar.currentTime = 0;
-        sonidos.ndCongelar.play()
-    } else {
-        el.style.backgroundColor = "#111";
-        el.style.color = "#0ff";
-        el.style.boxShadow = "0 0 10px #0ff";
-        sonidos.ndRomper.currentTime = 0;
-        sonidos.ndRomper.play()
-    }
+#neon-dice-score {
+    margin: 20px auto;
+    border-collapse: collapse;
+    border: 2px solid rgb(204, 204, 204);
+    color: rgb(244, 244, 244);
+    text-shadow: 0 0 15px #24dcab;
+    font-size: 1.2em;
+    width: 300px;
+    box-shadow: 0 0 15px #6f7389;
+    font-family: 'Share Tech Mono', 'Orbitron', 'Rajdhani', monospace;
+
+    background-image: url('images/nd-fondo.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(2px);
+    border-radius: 10px;
 }
 
-// Agregar listeners para congelar dados
-[0, 1, 2, 3, 4].forEach(i => {
-    document.getElementById(`d${i + 1}`).addEventListener("click", () => toggleFreeze(i));
-});
-
-function handleNewNeonScore(score) {
-    const container = document.getElementById('neon-best-score-input-container');
-    const input = document.getElementById('neon-best-score-name-input');
-    const saveBtn = document.getElementById('save-neon-record-btn');
-
-    // Asegúrate de que estas variables de los elementos existan.
-    if (!container || !input || !saveBtn) {
-        console.error("Elementos de input de nuevo récord no encontrados.");
-        return;
-    }
-
-    const neonBestScores = JSON.parse(localStorage.getItem("neonBestScores")) || [];
-    const MAX_NEON_SCORES = 5;
-
-    const isNewRecord = score > 0 && (neonBestScores.length < MAX_NEON_SCORES || 
-        (neonBestScores.length > 0 && score > neonBestScores[neonBestScores.length - 1].score));
-
-    if (isNewRecord) {
-        // Si es un nuevo récord, solo muestra el input para el nombre
-        container.style.display = 'block';
-        input.value = localStorage.getItem('lastNeonUsername') || "Anónimo";
-        input.focus();
-        saveBtn.onclick = () => {
-            const name = input.value.trim() || "Anónimo";
-            localStorage.setItem('lastNeonUsername', name);
-            saveNeonScore(score, name);
-            container.style.display = 'none';
-            if (ndMessageContainer) {
-                ndMessageContainer.style.display = 'none'; 
-            }
-            showNeonScores();
-        };
-    } else {
-        // Si NO es un nuevo récord (o si la puntuación es 0), ocultamos el input y el botón de guardar
-        container.style.display = 'none';
-        showNeonGameMessage(`Fin del juego. Puntuación: ${score}`);
-    }
+#neon-dice-score td {
+    border: 1px solid #0ff;
+    padding: 8px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: rgb(194, 194, 194);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    will-change: transform;
+    font-family: inherit;
 }
 
-// Permitir hacer clic en una casilla de puntuación
-document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
-    td.addEventListener("click", () => {
-        if (turnEnded) return;
-
-        if (td.textContent !== "") {
-            return;
-        }
-        sonidos.ndAnotar.play()
-        const score = calculateScore(td.previousSibling.textContent.trim());
-        td.textContent = score;
-        turnEnded = true;
-
-        // Si el juego está completo, guardar récord
-        if (isNeonDicesGameComplete()) {
-            const totalScore = calculateTotalNeonScore();
-            handleNewNeonScore(totalScore);
-        }
-
-        resetTurn();
-    });
-});
-
-function resetTurn() {
-    diceValues = [0, 0, 0, 0, 0];
-    frozen = [false, false, false, false, false];
-    rollCount = 0;
-    turnEnded = false;
-
-    [1, 2, 3, 4, 5].forEach(i => {
-        const el = document.getElementById(`d${i}`);
-        el.textContent = "?";
-        el.style.backgroundColor = "#111";
-        el.style.color = "#0ff";
-        el.style.boxShadow = "0 0 10px #0ff";
-    });
+#neon-dice-score td:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    transform: none;
 }
 
-// Calcula la puntuación según la categoría elegida
-function calculateScore(category) {
-    const counts = [0, 0, 0, 0, 0, 0];
-    diceValues.forEach(val => counts[val - 1]++);
+#dice-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
 
-    switch (category.toLowerCase()) {
-        case "unos": return counts[0] * 1;
-        case "doses": return counts[1] * 2;
-        case "treses": return counts[2] * 3;
-        case "cuatros": return counts[3] * 4;
-        case "cincos": return counts[4] * 5;
-        case "seis": return counts[5] * 6;
-        case "escalera": return isStraight() ? 25 : 0;
-        case "full": return counts.includes(3) && counts.includes(2) ? 30 : 0;
-        case "póker": return counts.includes(4) ? 40 : 0;
-        case "neon dice": return counts.includes(5) ? 50 : 0;
-        case "doble neon dice": return counts.includes(5) ? 100 : 0;
-        default: return 0;
+.scored-cell {
+    color: #000000; /* Cian brillante */
+    text-shadow: 0 0 5px rgb(0, 105, 105), 0 0 10px rgb(0, 159, 159), 0 0 15px rgb(0, 65, 65);
+    font-weight: bold;
+}
+
+.dice {
+    width: 60px;
+    height: 60px;
+    background-color: #111;
+    border: 2px solid #0ff;
+    border-radius: 10px;
+    font-size: 2em;
+    color: #0ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px #0ff;
+    font-family: monospace;
+}
+
+#neon-dice-score td:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+/* Estilos para la lista de récords de Neon Dices */
+#neon-scores-container { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    z-index: 100;
+
+    margin-top: 0;
+    border: 1px solid #FFD700;
+    padding: 20px; 
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+}
+
+#neon-scores-container h2 { 
+    color: #ffffff; 
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#neon-scores-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#neon-scores-list li {
+    padding: 8px 15px;
+    border-bottom: 1px dotted #FFD700;
+    color: #fff;
+    font-size: 1.2em;
+    font-family: monospace;
+    white-space: pre; /* respeta los espacios agregados con padEnd */
+}
+
+#neon-scores-list li:last-child {
+    border-bottom: none;
+}
+
+#neon-scores-list li.record {
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    animation: glow 1s ease-in-out infinite alternate;
+}
+
+@media screen and (max-width: 1024px) {
+    #neon-dice-score {
+        font-size: 0.9em;
+        width: 250px;
+    }
+
+    .dice {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4em;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    #neon-scores-container,
+    #neon-best-score-input-container {
+        width: 90%;
+        max-width: 350px;
+        font-size: 0.95em;
+    }
+
+    #dice-container {
+        flex-wrap: wrap;
+        gap: 10px;
     }
 }
 
-function isStraight() {
-    const sorted = [...new Set(diceValues)].sort((a, b) => a - b);
-    const straights = [
-        [1, 2, 3, 4, 5],
-        [2, 3, 4, 5, 6]
-    ];
-    return straights.some(seq => seq.every((val, i) => val === sorted[i]));
+#neon-best-score-input-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: none;
+
+    border: 1px solid #FFD700;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
 }
 
-function isNeonDicesGameComplete() {
-    const cells = document.querySelectorAll("#neon-dice-score td:nth-child(2)");
-    let filled = 0;
-
-    cells.forEach(td => {
-        if (td.previousSibling.textContent.trim() !== "Total" && td.textContent !== "") {
-            filled++;
-        }
-    });
-
-    return filled === 11;
+#neon-best-score-input-container h2 {
+    color: #ffffff;
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
 }
 
-function calculateTotalNeonScore() {
-    let total = 0;
-    document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
-        const val = parseInt(td.textContent);
-        if (!isNaN(val)) {
-            total += val;
-        }
-    });
-    return total;
+#neon-best-score-name-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #FFD700;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    width: 80%;
+    margin-bottom: 10px;
 }
 
-function saveNeonScore(score, user) {
-    let scores = JSON.parse(localStorage.getItem("neonBestScores")) || [];
-    scores.push({ user, score });
-    scores.sort((a, b) => b.score - a.score); // Mayor puntuación primero
-
-    if (scores.length > MAX_NEON_SCORES) {
-        scores = scores.slice(0, MAX_NEON_SCORES);
-    }
-
-    localStorage.setItem("neonBestScores", JSON.stringify(scores));
+#save-neon-record-btn {
+    margin-top: 10px;
 }
 
-function toggleNeonScores() {
-    const container = document.getElementById("neon-scores-container");
-    const list = document.getElementById("neon-scores-list");
+/* Estilos para los mensajes de juego superpuestos (como "Nuevo Récord" o "Game Over") */
+.game-message-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid; /* Borde que cambiará de color */
+    padding: 25px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px; /* Sombra que cambiará de color */
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    min-width: 280px;
+}
 
-    if (container.style.display === "none" || container.style.display === "") {
-        // Mostrar y cargar datos
-        const scores = JSON.parse(localStorage.getItem("neonBestScores")) || [];
+.game-message-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 8px;
+    margin: 0;
+}
 
-        list.innerHTML = "";
-        if (scores.length === 0) {
-            list.innerHTML = "<li>No hay récords aún.</li>";
-        } else {
-            scores.forEach((entry, i) => {
-                const li = document.createElement("li");
-                li.textContent = `${i + 1}. ${entry.user.padEnd(25, ' ')}${entry.score.toString().padStart(6, ' ')} pts`;
+.game-message-button { 
+    background-color: transparent;
+    color: rgb(255, 0, 0); 
+    border: 2px solid rgb(255, 0, 0); 
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgb(255, 0, 0);
+}
+
+.game-message-button:hover {
+    background-color: rgb(255, 0, 0);
+    color: #000000;
+    box-shadow: 0 0 20px rgb(255, 0, 0);
+}
+
+/* Estilos específicos para mensajes de "Fin del Juego" (Rojo) */
+.game-message-container.game-over {
+    border-color: #FF0000;
+    box-shadow: 0 0 25px #FF0000;
+}
+.game-message-container.game-over .game-message-text {
+    text-shadow: 0 0 8px #FF0000;
+}
+/*#############################################################################################
+-------------------------------------------SIMON SAYS-------------------------------------
+###############################################################################################*/
+
+#simon-says {
+    border: 2px solid #00fff7;
+}
+
+#simon-says h1 {
+    color: #FFFFFF;
+    text-shadow: 0 0 10px #00fbff, 0 0 20px #00fbff; 
+}
+
+#simon-buttons-container {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-template-rows: repeat(2, 120px);
+    gap: 10px;
+    margin: 30px auto;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%; /* Hacer el contenedor circular */
+    background-color: rgba(32, 32, 32, 0.805);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.869); /* Sombra neón alrededor del círculo */
+    padding: 20px;
+    position: relative;
+}
+
+.simon-button {
+    width: 100%;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.9s, box-shadow 0.2s;
+}
+
+#simon-board {
+    display: grid;
+    grid-template-columns: repeat(2, 100px);
+    grid-template-rows: repeat(2, 100px);
+    gap: 10px;
+    width: 210px;
+    height: 210px;
+    margin: 20px auto;
+    border-radius: 50%;
+    background-color: #333;
+    box-shadow: 0 0 20px rgb(0, 247, 255);
+    overflow: hidden;
+    position: relative;
+}
+
+#simon-red {
+    background-color: #f00;
+    border-top-left-radius: 100%;
+}
+
+#simon-green {
+    background-color: #0f0;
+    border-top-Right-radius: 100%; 
+}
+
+#simon-blue {
+    background-color: #00f;
+    border-bottom-left-radius: 100%;
+}
+
+#simon-yellow {
+    background-color: #ff0;
+    border-bottom-right-radius: 100%;
+}
+
+#simon-red.lit {
+    box-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000d4; 
+}
+#simon-green.lit {
+    box-shadow: 0 0 20px #00FF00, 0 0 40px #00FF00;
+}
+#simon-blue.lit {
+    box-shadow: 0 0 20px #002fff, 0 0 40px #0044ff; 
+}
+#simon-yellow.lit {
+    box-shadow: 0 0 20px #FFFF00, 0 0 40px #FFFF00;
+}
+
+#simon-status, #simon-round {
+    font-size: 1.5em;
+    margin-top: 15px;
+    color: #ffffff;
+    text-shadow: 0 0 20px #d400ff; /* Sombra de texto fucsia */
+}
+
+/* Estilos para el contenedor de récords de Simon Says (similar al de Buscaminas) */
+#simon-best-scores-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+
+    margin-top: 0;
+    border: 1px solid #FFD700;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px;
+    text-align: left;
+}
+
+#simon-best-scores-container h2 {
+    color: #ffffff;
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+#simon-best-scores-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#simon-best-scores-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 5px 10px;
+    border-bottom: 1px dotted #FFD700;
+    color: #fff;
+    font-size: 1.1em;
+}
+
+#simon-best-scores-list li:last-child {
+    border-bottom: none;
+}
+
+/* La clase 'record' ya está definida globalmente para el brillo. */
+
+/*#############################################################################################
+-------------------------------------PIEDRA PAPEL TIJERA--------------------------------------
+###############################################################################################*/
+
+.ppt-options {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.5em;
+}
+
+.ppt-options button {
+    padding: 0.6em 1.2em;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0ff;
+    background-color: black;
+    border: 2px solid #0ff;
+    border-radius: 8px;
+    cursor: pointer;
+    text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
+    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff inset;
+    transition: transform 0.2s;
+}
+
+.ppt-options button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #0ff, 0 0 25px #0ff inset;
+}
+
+.ppt-result {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 5px #fff;
+}
+
+.choice-box {
+    text-align: center;
+}
+
+.emoji-box {
+    font-size: 40px;
+    width: 60px;
+    height: 60px;
+    border: 3px solid #aaa;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px auto;
+    background-color: #fff;
+}
+
+
+#ppt-replay button {
+    background-color: #000;
+    color: #0ff;
+    border: 2px solid #0ff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 0 10px #0ff;
+}
+
+#ppt-replay button:hover {
+    background-color: #0ff;
+    color: #000;
+    box-shadow: 0 0 20px #0ff;
+}
+
+/*#############################################################################################
+--------------------------------------------OPCIONES-------------------------------------
+###############################################################################################*/
+
+/* Estilos personalizados para la pantalla de Opciones */
+#options {
+    color: white;
+    text-shadow: 0 0 8px #00ff00; 
+    padding: 20px;
+    border: 3px solid #00ff00;
+    border-radius: 15px; 
+    background-color: rgba(0, 0, 0, 0.413); 
+    box-shadow: 0 0 25px #00ff00, inset 0 0 15px #00ff00;
+    background-image: url('images/opciones.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-blend-mode: overlay;
+}
+
+#options label {
+    font-size: 1.5em;
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 0 0 8px #00ff00;
+}
+
+#options div {
+    margin-bottom: 30px; /* más espacio entre secciones */
+    padding: 15px;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    background-color: rgba(56, 56, 56, 0.5);
+    box-shadow: 0 0 15px #00ff00;
+}
+
+#options input[type="range"] {
+    width: 100%;
+    height: 30px;
+    background: #111;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+#options input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+}
+
+#options input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+}
+
+.btn-volver-menu {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    min-width: 150px;
+    padding: 8px 18px;
+    margin-top: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #00ff00;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-volver-menu:hover {
+    color: #000000;
+    background-color: #00ff00;
+    box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    transform: translateY(-1px);
+}
+
+/*#############################################################################################
+--------------------------------------------CRÉDITOS-------------------------------------
+###############################################################################################*/
+
+#credits {
+    color: white;
+    background-color: #000000ab;
+    padding: 30px;
+    border: 3px solid #00FFFF;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #1607b8, inset 0 0 10px #0d0ac0;
+    text-align: center;
+    margin: 50px auto;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image: url('images/icon-512.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-blend-mode: overlay;
+}
+
+#credits ul li {
+    color: white;
+    text-shadow: 0 0 8px #008080, 0 0 15px #008080;
+}
+
+#credits h2 {
+    font-size: 2.8em;
+    margin-bottom: 25px;
+    /* Contorno y sombra neón azul */
+    color: white; /* Asegura que el texto base sea blanco */
+    text-shadow: 
+        0 0 5px #00eaff, /* Azul cielo profundo */
+        0 0 10px #022970,
+        0 0 15px #022970,
+        0 0 20px #022970,
+        0 0 30px #00BFFF,
+        0 0 40px #0613c9; 
+}
+
+#credits h3 {
+    font-size: 2em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: white;
+    text-shadow: 
+        0 0 5px #00BFFF, 
+        0 0 10px #00BFFF,
+        0 0 15px #0917d2,
+        0 0 40px #0613c9; 
+}
+
+#credits .team ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+#credits .team ul li {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #ffffff;
+     text-shadow: 
+        0 0 5px #00fff7,
+        0 0 10px #0072b5,
+        0 0 15px #001eff,
+        0 0 40px #0613c9;
+}
+
+#credits .btn-volver-menu {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    min-width: 150px;
+    padding: 10px 20px;
+    margin-top: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
     
-                // Resaltar el mejor puntaje
-                if (i === 0) {
-                li.classList.add("record");
-                }
-
-                list.appendChild(li);
-            });
-        }
-        sonidos.mostrarBestTimes.play();
-        container.style.display = "block";
-    } else {
-        // Ocultar si ya estaba visible
-        sonidos.volver.play();
-        container.style.display = "none";
-    }
-}
-
-function resetGame() {
-    sonidos.volver.play();
-    diceValues = [0, 0, 0, 0, 0];
-    frozen = [false, false, false, false, false];
-    rollCount = 0;
-    turnEnded = false;
-
-    // Reiniciar visual de los dados
-    [1, 2, 3, 4, 5].forEach(i => {
-        const el = document.getElementById(`d${i}`);
-        el.textContent = "?";
-        el.style.backgroundColor = "#111";
-        el.style.color = "#0ff";
-        el.style.boxShadow = "0 0 10px #0ff";
-    });
-
-    // Limpiar todas las celdas de puntuación
-    document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
-        td.textContent = "";
-    });
-
-    // Ocultar el panel de récords si está visible
-    document.getElementById("neon-scores-container").style.display = "none";
-}
-
-// mostrar el mensaje para el fin del Juego
-function showNeonGameMessage(message) { 
-    if (!ndMessageContainer || !ndMessageText) return; 
-
-    ndMessageText.textContent = message;
-    ndMessageContainer.classList.remove('record'); 
-    ndMessageContainer.classList.add('game-over'); 
+    color: #0004e9; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    border: 2px solid #0428aa; 
+    box-shadow: 0 0 10px #011e9e;
     
-    sonidos.mostrarBestTimes.play(); 
-
-    ndMessageContainer.style.display = 'flex'; 
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/*#############################################################################################
-------------------------------------------SIMON SAYS--------------------------------------
-###############################################################################################*/
-
-const simonButtons = document.querySelectorAll('.simon-button');
-const simonStatus = document.getElementById('simon-status');
-const simonRoundDisplay = document.getElementById('simon-round');
-
-let simonSequence = [];
-let playerSequence = [];
-let round = 0;
-let canClick = false;
-
-// Variables para récords
-const MAX_SIMON_BEST_SCORES = 5;
-let simonBestScores = JSON.parse(localStorage.getItem('simonBestScores')) || [];
-
-const buttonColors = ["red", "green", "blue", "yellow"];
-
-// Sonidos para el juego
-const sounds = {
-    red: new Audio('sounds/ss-red.mp3'),
-    green: new Audio('sounds/ss-green.mp3'),
-    blue: new Audio('sounds/ss-blue.mp3'),
-    yellow: new Audio('sounds/ss-yellow.mp3')
-};
-
-function startSimonSays() {
-    document.getElementById("simon-best-score-input-container").style.display = "none";
-    document.getElementById("simon-best-scores-container").style.display = "none";
-    simonSequence = [];
-    playerSequence = [];
-    round = 0;
-    canClick = false;
-    simonStatus.textContent = "Haz click para empezar";
-    simonRoundDisplay.textContent = "Ronda: 0";
-    resetSimonButtonStyles();
-
-    // Eliminar listeners previos para evitar duplicados
-    simonButtons.forEach(button => {
-        button.removeEventListener('click', handleSimonButtonClick);
-    });
-
-    // Añadir el listener para iniciar el juego con un clic en los botones
-    simonButtons.forEach(button => {
-        button.addEventListener('click', handleSimonButtonClick);
-    });
-
-    // El juego realmente empieza con la primera ronda cuando el usuario interactúa
-    simonStatus.textContent = "Presiona cualquier botón para empezar...";
-}
-
-function restartSimonSays() {
-    sonidos.volver.play();
-    startSimonSays()
-}
-
-function resetSimonButtonStyles() {
-    simonButtons.forEach(button => {
-        button.style.opacity = '1';
-        button.style.boxShadow = 'none';
-    });
-    document.getElementById('simon-red').style.backgroundColor = '#FF0000';
-    document.getElementById('simon-green').style.backgroundColor = '#00FF00';
-    document.getElementById('simon-blue').style.backgroundColor = '#002FFF';
-    document.getElementById('simon-yellow').style.backgroundColor = '#FFFF00';
-}
-
-
-function nextRound() {
-    round++;
-    simonRoundDisplay.textContent = `Ronda: ${round}`;
-    playerSequence = [];
-    canClick = false;
-    simonStatus.textContent = "Mira la secuencia...";
-
-    // Agrega un color aleatorio a la secuencia
-    const randomColor = buttonColors[Math.floor(Math.random() * buttonColors.length)];
-    simonSequence.push(randomColor);
-
-    playSequence(simonSequence);
-}
-
-function playSequence(sequence) {
-    let i = 0;
-    const interval = setInterval(() => {
-        if (i >= sequence.length) {
-            clearInterval(interval);
-            canClick = true;
-            simonStatus.textContent = "¡Repite la secuencia!";
-            return;
-        }
-
-        const color = sequence[i];
-        lightUpButton(color);
-        i++;
-    }, 800); // Duración de cada luz/sonido en la secuencia
-}
-
-function lightUpButton(color) {
-    const button = document.getElementById(`simon-${color}`);
-    button.style.opacity = '0.6';
-    button.style.boxShadow = `0 0 20px ${getNeonColor(color)}`; // Aplica brillo neón
-    if (sonidos.ss[color]) {
-    sonidos.ss[color].currentTime = 0;
-    sonidos.ss[color].play();
-    }
-
-    setTimeout(() => {
-        button.style.opacity = '1';
-        button.style.boxShadow = 'none';
-    }, 400); // Duración que el botón permanece encendido
-}
-
-function getNeonColor(color) {
-    switch (color) {
-        case 'red': return '#FF0000'; 
-        case 'green': return '#00FF00';
-        case 'blue': return '#00FFFF'; 
-        case 'yellow': return '#FFFF00';
-        default: return 'none';
-    }
-}
-
-function handleSimonButtonClick(event) {
-    if (!canClick && round === 0) { // Si el juego no ha empezado
-        nextRound(); // Inicia la primera ronda
-        return;
-    }
-
-    if (!canClick) return;
-
-    const clickedColor = event.target.dataset.color;
-    playerSequence.push(clickedColor);
-    lightUpButton(clickedColor); // Reproduce el sonido y la luz del botón presionado
-
-    checkSequence();
-}
-
-function checkSequence() {
-    const lastIndex = playerSequence.length - 1;
-
-    if (playerSequence[lastIndex] !== simonSequence[lastIndex]) {
-        gameOverSimon();
-        return;
-    }
-
-    if (playerSequence.length === simonSequence.length) {
-        canClick = false;
-        simonStatus.textContent = "¡Correcto! Siguiente ronda...";
-        setTimeout(nextRound, 1000);
-    }
-}
-
-function gameOverSimon() {
-    canClick = false;
-    sonidos.gameOver.play();
-    simonStatus.textContent = `¡Perdiste! Alcanzaste la Ronda: ${round -1}`;
-    // Lógica para guardar el récord si es necesario
-    handleNewSimonScore(round - 1); // Guarda la ronda anterior como puntuación
-}
-
-function handleNewSimonScore(newScore) {
-    if (newScore > 0) { // Solo si el jugador superó la ronda 0
-        const simonScoreInputContainer = document.getElementById('simon-best-score-input-container');
-        simonScoreInputContainer.style.display = 'block';
-
-        const simonScoreNameInput = document.getElementById('simon-best-score-name-input');
-        simonScoreNameInput.value = localStorage.getItem('lastSimonUsername') || "Anónimo";
-        simonScoreNameInput.focus();
-
-        const saveSimonRecordBtn = document.getElementById('save-simon-record-btn');
-        saveSimonRecordBtn.onclick = () => {
-            const enteredName = simonScoreNameInput.value.trim();
-            const username = enteredName || "Anónimo";
-            localStorage.setItem('lastSimonUsername', username);
-
-            updateSimonBestScoresInternal(newScore, username);
-
-            simonScoreInputContainer.style.display = 'none';
-            displaySimonBestScores();
-        };
-    }
-}
-
-function updateSimonBestScoresInternal(newScore, user) {
-    let simonBestScores = JSON.parse(localStorage.getItem('simonBestScores')) || [];
-    simonBestScores.push({ score: newScore, user: user });
-    simonBestScores.sort((a, b) => b.score - a.score); // Ordena de mayor a menor
-
-    if (simonBestScores.length > MAX_SIMON_BEST_SCORES) {
-        simonBestScores = simonBestScores.slice(0, MAX_SIMON_BEST_SCORES);
-    }
-    localStorage.setItem('simonBestScores', JSON.stringify(simonBestScores));
-}
-
-function displaySimonBestScores() {
-    const simonBestScores = JSON.parse(localStorage.getItem('simonBestScores')) || [];
-    const simonBestScoresList = document.getElementById('simon-best-scores-list');
-    simonBestScoresList.innerHTML = '';
-
-    if (simonBestScores.length === 0) {
-        simonBestScoresList.innerHTML = '<li>No hay récords aún.</li>';
-    } else {
-        simonBestScores.forEach((record, index) => {
-            const listItem = document.createElement('li');
-            const rankAndName = document.createElement('span');
-            rankAndName.textContent = `${index + 1}. ${record.user}`;
-
-            const scoreValue = document.createElement('span');
-            scoreValue.textContent = `${record.score} rondas`;
-
-            listItem.appendChild(rankAndName);
-            listItem.appendChild(scoreValue);
-
-            if (index === 0) {
-                listItem.classList.add('record');
-            }
-            simonBestScoresList.appendChild(listItem);
-        });
-    }
-}
-
-function toggleSimonBestScores() {
-    const container = document.getElementById('simon-best-scores-container');
-    if (container.style.display === 'none' || container.style.display === '') {
-        displaySimonBestScores();
-        sonidos.mostrarBestTimes.play();
-        container.style.display = 'block';
-    } else {
-        sonidos.volver.play();
-        container.style.display = 'none';
-    }
-}
-
-
-
-/*#############################################################################################
--------------------------------------------Piedra papel tijera--------------------------------------
-###############################################################################################*/
-let pptWins = 0;
-let pptDraws = 0;
-let pptLosses = 0;
-
-function playppt(playerChoice) {
-
-    const choices = ["👊", "📄", "✂️"];
-    const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
-    let result = "";
-    let emoji = "";
-
-    if (playerChoice === cpuChoice) {
-        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Empate! 🤝`;
-        pptDraws++;
-        sonidos.pptDraw.play();
-    } else if (
-        (playerChoice === "👊" && cpuChoice === "✂️") ||
-        (playerChoice === "📄" && cpuChoice === "👊") ||
-        (playerChoice === "✂️" && cpuChoice === "📄")
-    ) {
-        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Ganaste! 🎉`;
-        pptWins++;
-        sonidos.pptWin.play();
-    } else {
-        result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. Perdiste 😢`;
-        pptLosses++;
-        sonidos.pptLose.play();
-
-    }
-
-    document.getElementById("player-choice").textContent = playerChoice;
-    document.getElementById("cpu-choice").textContent = cpuChoice;
-    document.getElementById("ppt-result").textContent = result;
-    updatepptScoreboard();
-    document.getElementById("ppt-options").style.display = "none";
-    document.getElementById("ppt-replay").style.display = "block";
-}
-
-function updatepptScoreboard() {
-    document.getElementById("ppt-wins").textContent = pptWins;
-    document.getElementById("ppt-draws").textContent = pptDraws;
-    document.getElementById("ppt-losses").textContent = pptLosses;
-}
-
-function resetpptGame() {
-    document.getElementById("player-choice").textContent = "❓";
-    document.getElementById("cpu-choice").textContent = "❓";
-    document.getElementById("ppt-result").textContent = "";
-    document.getElementById("ppt-options").style.display = "flex";
-    document.getElementById("ppt-replay").style.display = "none";
-    sonidos.volver.play();
-}
-
-function resetpptScoreboard() {
-    sonidos.volver.play();
-    pptWins = 0;
-    pptDraws = 0;
-    pptLosses = 0;
-    updatepptScoreboard();
+#credits .btn-volver-menu:hover {
+    color: #00ffdd;
+    background-color: #010abd; 
+    box-shadow: 0 0 20px #000bd4, 0 0 30px #002fbb;
+    
+    transform: translateY(-1px);
 }
