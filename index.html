@@ -187,26 +187,35 @@
             <h1>Opciones</h1>
             <div>
                 <label>🎵 Volumen Música</label>
-                <input type="range" min="0" max="1" step="0.01" id="vol-musica" value="0.5">
+                <input type="range" min="0" max="1" step="0.01" 
+                    id="vol-musica" value="0.5" oninput="playSliderMSound()">
             </div>
             <div>
                 <label>🔊 Volumen Efectos</label>
-                <input type="range" min="0" max="1" step="0.01" id="vol-efectos" value="0.7">
+                <input type="range" min="0" max="1" step="0.01" 
+                    id="vol-efectos" value="0.7" oninput="playSliderSound()">
             </div>
-            <button onclick="showMenu()">Volver al Menú</button>
+            <button class="btn-volver-menu" onclick="showMenu()">Volver al Menú</button>
         </div>
 
-        <div id="credits" class="game-screen" style="display: none;">
-            <h1>Créditos</h1>
-            <p>Desarrollado por PWA8G </p>
-            <button onclick="showMenu()">Volver al Menú</button>
+        <div id="credits" class ="game-screen" style="display: none;">
+            <h2>Créditos del Juego</h2>
+            <div class="team">
+                <h3>Equipo de Desarrollo:</h3>
+                <ul>
+                    <li>Ramiro Palavecino</li>
+                    <li>Rodrigo Paredes</li>
+                    <li>Franco Rivera</li>
+                    <li>Jeanette Monje</li>
+                </ul>
+            </div>
+
+            <button class="btn-volver-menu" onclick="showMenu()">Volver al Menú</button>
+            </div>
         </div>
-    </div>
 
-   
-
-    <script src="script.js"></script>
-    <script>
+        <script src="script.js"></script>
+        <script>
      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js')
         .then(() => console.log('✔ Service Worker registrado'))
