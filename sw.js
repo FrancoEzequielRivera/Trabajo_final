@@ -10,7 +10,7 @@ const urlsToCache = [
   './images/icon-192-maskable.png',
   './images/icon-512-maskable.png',
   './images/apple-touch-icon.png',
-  './images/fg-flappy.jpeg',
+  './images/fg-flappy.png',
   './images/fg-viga.png',
   './images/f2.jpg',
   './flappy-assets/bird.png',
