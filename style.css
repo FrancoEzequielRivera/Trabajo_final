@@ -784,6 +784,10 @@ li.record {
     background-repeat: no-repeat;
     background-position: center center;
     background-blend-mode: overlay;
+    width: 100%; 
+    max-width: 600px; 
+    margin: 20px auto;
+    box-sizing: border-box; 
 }
 
 #options label {
