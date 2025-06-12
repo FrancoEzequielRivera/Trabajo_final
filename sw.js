@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Pweanding-cache-v1'; // Incrementa la versión del caché
+const CACHE_NAME = 'Pweanding-cache-v2'; // Incrementa la versión del caché
 const urlsToCache = [
   './',
   './index.html',
