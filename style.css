@@ -747,6 +747,7 @@ li.record {
     background-color: #fff;
 }
 
+
 #ppt-replay button {
     background-color: #000;
     color: #0ff;
@@ -763,4 +764,202 @@ li.record {
     background-color: #0ff;
     color: #000;
     box-shadow: 0 0 20px #0ff;
+}
+
+/*#############################################################################################
+--------------------------------------------OPCIONES-------------------------------------
+###############################################################################################*/
+
+/* Estilos personalizados para la pantalla de Opciones */
+#options {
+    color: white;
+    text-shadow: 0 0 8px #00ff00; 
+    padding: 20px;
+    border: 3px solid #00ff00;
+    border-radius: 15px; 
+    background-color: rgba(0, 0, 0, 0.413); 
+    box-shadow: 0 0 25px #00ff00, inset 0 0 15px #00ff00;
+    background-image: url('images/opciones.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-blend-mode: overlay;
+}
+
+#options label {
+    font-size: 1.5em;
+    display: block;
+    margin-bottom: 10px;
+    color: white;
+    text-shadow: 0 0 8px #00ff00;
+}
+
+#options div {
+    margin-bottom: 30px; /* más espacio entre secciones */
+    padding: 15px;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    background-color: rgba(56, 56, 56, 0.5);
+    box-shadow: 0 0 15px #00ff00;
+}
+
+#options input[type="range"] {
+    width: 100%;
+    height: 30px;
+    background: #111;
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+#options input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+}
+
+#options input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ffffff;
+    border: 2px solid #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+}
+
+.btn-volver-menu {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    min-width: 150px;
+    padding: 8px 18px;
+    margin-top: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    color: #00ff00;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #00ff00;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-volver-menu:hover {
+    color: #000000;
+    background-color: #00ff00;
+    box-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    transform: translateY(-1px);
+}
+
+/*#############################################################################################
+--------------------------------------------CRÉDITOS-------------------------------------
+###############################################################################################*/
+
+#credits {
+    color: white;
+    background-color: #000000ab;
+    padding: 30px;
+    border: 3px solid #00FFFF;
+    border-radius: 12px;
+    box-shadow: 0 0 20px #1607b8, inset 0 0 10px #0d0ac0;
+    text-align: center;
+    margin: 50px auto;
+    width: 600px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-image: url('images/icon-512.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-blend-mode: overlay;
+}
+
+#credits ul li {
+    color: white;
+    text-shadow: 0 0 8px #008080, 0 0 15px #008080;
+}
+
+#credits h2 {
+    font-size: 2.8em;
+    margin-bottom: 25px;
+    /* Contorno y sombra neón azul */
+    color: white; /* Asegura que el texto base sea blanco */
+    text-shadow: 
+        0 0 5px #00eaff, /* Azul cielo profundo */
+        0 0 10px #022970,
+        0 0 15px #022970,
+        0 0 20px #022970,
+        0 0 30px #00BFFF,
+        0 0 40px #0613c9; 
+}
+
+#credits h3 {
+    font-size: 2em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: white;
+    text-shadow: 
+        0 0 5px #00BFFF, 
+        0 0 10px #00BFFF,
+        0 0 15px #0917d2,
+        0 0 40px #0613c9; 
+}
+
+#credits .team ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+#credits .team ul li {
+    font-size: 1.4em;
+    margin-bottom: 10px;
+    color: #ffffff;
+     text-shadow: 
+        0 0 5px #00fff7,
+        0 0 10px #0072b5,
+        0 0 15px #001eff,
+        0 0 40px #0613c9;
+}
+
+#credits .btn-volver-menu {
+    display: inline-block;
+    width: auto;
+    height: auto;
+    min-width: 150px;
+    padding: 10px 20px;
+    margin-top: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    
+    color: #0004e9; 
+    background-color: rgba(0, 0, 0, 0.7); 
+    border: 2px solid #0428aa; 
+    box-shadow: 0 0 10px #011e9e;
+    
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#credits .btn-volver-menu:hover {
+    color: #00ffdd;
+    background-color: #010abd; 
+    box-shadow: 0 0 20px #000bd4, 0 0 30px #002fbb;
+    
+    transform: translateY(-1px);
 }
