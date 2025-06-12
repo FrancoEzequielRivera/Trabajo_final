@@ -450,6 +450,12 @@ function toggleBestTimes() {
 ###############################################################################################*/
 
 function startFlappybird() {
+  const birdImage = new Image();
+  birdImage.src = "images/fg-flappy.jpeg";
+
+  const pipeImage = new Image();
+  pipeImage.src = "images/fg-viga.png";
+
   const canvas = document.getElementById("flappy-canvas");
   const ctx = canvas.getContext("2d");
 
@@ -458,7 +464,7 @@ function startFlappybird() {
   const pipeSpeed = 2;
   const pipeIntervalFrames = 120;
   const gap = 140;
-  const birdSize = 30;
+  const birdSize = 40;
 
   let bird = { x: 50, y: canvas.height / 2, velocity: 0, width: birdSize, height: birdSize };
   let pipes = [];
@@ -497,25 +503,59 @@ function startFlappybird() {
   }
 
   function drawBird() {
-    ctx.fillStyle = "#00FFFF"; // celeste neón
-    ctx.shadowBlur = 0;
-    ctx.shadowColor = "#00FFFF";
-    ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
-    ctx.shadowBlur = 0;
-  }
+  ctx.save();
+  ctx.translate(bird.x + bird.width / 2, bird.y + bird.height / 2);
+  const angle = Math.min(Math.PI / 8, bird.velocity / 20); // inclinación hacia abajo
+  ctx.rotate(angle);
+  ctx.drawImage(birdImage, -bird.width / 2, -bird.height / 2, bird.width, bird.height);
+  ctx.restore();
+}
 
   function drawPipes() {
-      ctx.fillStyle = "#00FFFF"; // celeste neón
-      ctx.shadowBlur = 5;
-      ctx.shadowColor = "#00FFFF";
+  if (!pipeImage.complete) return;
 
-      pipes.forEach(pipe => {
-          ctx.fillRect(pipe.x, 0, pipe.width, pipe.top); // tubo superior
-          ctx.fillRect(pipe.x, canvas.height - pipe.bottom, pipe.width, pipe.bottom); // tubo inferior
-      });
+  const capHeight = 40; // altura fija de la cabeza (desde abajo de la imagen)
+  const bodyHeight = pipeImage.height - capHeight;
 
-      ctx.shadowBlur = 0;
-  }
+  pipes.forEach(pipe => {
+    // 🔼 TUBO SUPERIOR (de cabeza)
+    const topPipeHeight = pipe.top;
+
+    const stretchTop = topPipeHeight - capHeight;
+    if (stretchTop > 0) {
+      // Parte estirable (cuerpo del tubo)
+      ctx.save();
+      ctx.translate(pipe.x, pipe.top);
+      ctx.scale(1, -1);
+      ctx.drawImage(
+        pipeImage,
+        0, 0, pipeImage.width, bodyHeight,      // Parte superior de la imagen
+        0, 0, pipe.width, stretchTop            // Estira hacia abajo
+      );
+      ctx.restore();
+    }
+
+    // 🔽 TUBO INFERIOR (normal)
+    const bottomPipeY = canvas.height - pipe.bottom;
+    const stretchBottom = pipe.bottom - capHeight;
+
+    if (stretchBottom > 0) {
+      // Parte estirable (cuerpo)
+      ctx.drawImage(
+        pipeImage,
+        0, 0, pipeImage.width, bodyHeight,
+        pipe.x, bottomPipeY, pipe.width, stretchBottom
+      );
+    }
+
+    // Parte decorativa (cabeza)
+    ctx.drawImage(
+      pipeImage,
+      0, bodyHeight, pipeImage.width, capHeight,
+      pipe.x, bottomPipeY + stretchBottom, pipe.width, capHeight
+    );
+  });
+}
 
   function drawScore() {
       ctx.save();
@@ -549,7 +589,7 @@ function startFlappybird() {
 
       pipes.push({
         x: canvas.width,
-        width: 40,
+        width: 60,
         top: topPipeHeight,
         bottom: bottomPipeHeight,
         scored: false
