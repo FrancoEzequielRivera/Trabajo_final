@@ -82,8 +82,7 @@
                     <tr><td>Full</td><td></td></tr>
                     <tr><td>Póker</td><td></td></tr>
                     <tr><td>Neon Dice</td><td></td></tr>
-                    <tr><td>Doble Neon Dice</td><td></td></tr>
-                    <tr><td>Total</td><td></td></tr>   
+                    <tr><td>Doble Neon Dice</td><td></td></tr>  
                 </tbody>
             </table>
        
@@ -100,10 +99,23 @@
             <button onclick="showMenu()">🏠 Volver al Menú</button>
             <button onclick="resetGame()">🔄 Reiniciar Juego</button>
             <button onclick="toggleNeonScores()">🏆 Ver Mejores Puntajes</button>
+
+           <div id="nd-message-container" class="game-message-container" style="display: none;">
+                <p id="nd-message-text" class="game-message-text"></p>
+                <button id="nd-message-close-btn" class="game-message-button">OK</button>
+            </div>
+
             <div id="neon-scores-container" style="display: none; margin-top: 20px;">
                 <h2>🏆 Mejores Puntuaciones</h2>
                 <ul id="neon-scores-list"></ul>
             </div>
+
+            <div id="neon-best-score-input-container">
+                <h2>¡Nuevo récord! Ingresa tu nombre:</h2>
+                <input type="text" id="neon-best-score-name-input" placeholder="Tu nombre" maxlength="15">
+                <button id="save-neon-record-btn">Guardar Récord</button>
+            </div>
+
         </div>
 
         <div id="simon-says" class="game-screen" style="display: none;">
@@ -138,33 +150,18 @@
         <div id="ppt-game" class="game-screen" style="display: none;">
             <button onclick="showMenu()">🏠 Volver al Menú</button>
             <h2>¡Piedra, Papel o Tijera!</h2>
-            <div id="ppt-options" style="display: flex; gap: 10px; justify-content: center;">
-                <button onclick="playppt('👊')">👊 Piedra</button>
-                <button onclick="playppt('📄')">📄 Papel</button>
-                <button onclick="playppt('✂️')">✂️ Tijera</button>
+            <div class="ppt-options">
+                <button onclick="playppt('piedra')">👊 Piedra</button>
+                <button onclick="playppt('papel')">📄 Papel</button>
+                <button onclick="playppt('tijera')">✂️ Tijera</button>
             </div>
-            <div id="ppt-replay" style="display: none; text-align: center; margin-top: 20px;">
-                <button onclick="resetpptGame()">🔁 Volver a jugar</button>
-        </div>
-
-            <div class="choice-box">
-                <h2>Tu elección</h2>
-                <div id="player-choice" class="emoji-box">❓</div>
+            <div id="ppt-scoreboard" style="margin-top: 15px; font-family: 'Courier New', monospace; color: #0ff;">
+                🏆 Victorias: <span id="ppt-wins">0</span> |
+                🤝 Empates: <span id="ppt-draws">0</span> |
+                💔 Derrotas: <span id="ppt-losses">0</span>
             </div>
-            <div class="choice-box">
-                <h2>CPU</h2>
-                <div id="cpu-choice" class="emoji-box">❓</div>
-
-
-                <div id="ppt-scoreboard" style="margin-top: 15px; font-family: 'Courier New', monospace; color: #0ff;">
-                    🏆 Victorias: <span id="ppt-wins">0</span> |
-                    🤝 Empates: <span id="ppt-draws">0</span> |
-                    💔 Derrotas: <span id="ppt-losses">0</span>
-                </div>
-                <div class="ppt-result" id="ppt-result"></div>
-
-                <button onclick="resetpptScoreboard()">🔄 Reiniciar marcador</button>
-            </div>
+            <div class="ppt-result" id="ppt-result"></div>
+            <button onclick="resetpptScoreboard()">🔄 Reiniciar marcador</button>
         </div>
 
         <div id="options" class="game-screen" style="display: none;">
