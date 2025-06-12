@@ -37,6 +37,13 @@ const sonidos = {
         yellow: new Audio("sounds/ss-yellow.mp3"),
     },
 
+
+    // Piedra papel tijera
+    pptWin: new Audio("sounds/winPPT.mp3"),
+    pptLose: new Audio("sounds/losePPT.mp3"),
+    pptDraw: new Audio("sounds/cuackPPT.mp3"),
+
+    
     // Otros
     mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3"),
     gameOver: new Audio("sounds/gameOver.mp3"),
@@ -1143,6 +1150,7 @@ function playppt(playerChoice) {
     if (playerChoice === cpuChoice) {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Empate! 🤝`;
         pptDraws++;
+        sonidos.pptDraw.play();
     } else if (
         (playerChoice === "piedra" && cpuChoice === "tijera") ||
         (playerChoice === "papel" && cpuChoice === "piedra") ||
@@ -1150,9 +1158,11 @@ function playppt(playerChoice) {
     ) {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Ganaste! 🎉`;
         pptWins++;
+        sonidos.pptWin.play();
     } else {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. Perdiste 😢`;
         pptLosses++;
+        sonidos.pptLose.play();
     }
 
     document.getElementById("ppt-result").textContent = result;
