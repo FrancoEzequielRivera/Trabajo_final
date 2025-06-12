@@ -451,7 +451,7 @@ function toggleBestTimes() {
 
 function startFlappybird() {
   const birdImage = new Image();
-  birdImage.src = "images/fg-flappy.jpeg";
+  birdImage.src = "images/fg-flappy.png";
 
   const pipeImage = new Image();
   pipeImage.src = "images/fg-viga.png";
