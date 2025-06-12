@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Pweanding-cache-v2'; // Incrementa la versión del caché
+const CACHE_NAME = 'Pweanding-cache-v3'; // Incrementa la versión del caché
 const urlsToCache = [
   './',
   './index.html',
@@ -12,6 +12,7 @@ const urlsToCache = [
   './images/apple-touch-icon.png',
   './images/fg-flappy.jpeg',
   './images/fg-viga.png',
+  './images/nd-fondo.png',
   './images/f2.jpg',
   './flappy-assets/bird.png',
   './flappy-assets/bg.png',
