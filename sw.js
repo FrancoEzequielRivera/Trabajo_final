@@ -1,4 +1,4 @@
-const CACHE_NAME = 'Pweanding-cache-v3'; // Incrementa la versión del caché
+const CACHE_NAME = 'Pweanding-cache-v4'; // Incrementa la versión del caché
 const urlsToCache = [
   './',
   './index.html',
@@ -14,6 +14,7 @@ const urlsToCache = [
   './images/fg-viga.png',
   './images/nd-fondo.png',
   './images/f2.jpg',
+  './images/opciones.png',
   './flappy-assets/bird.png',
   './flappy-assets/bg.png',
   './sounds/bm-bomb.mp3',
@@ -38,6 +39,7 @@ const urlsToCache = [
   './sounds/winPPT.mp3',
   './sounds/losePPT.mp3',
   './sounds/cuackPPT.mp3',
+  './sounds/pruebaSonido.mp3'
 ];
 
 // Instalar el service worker y cachear archivos
