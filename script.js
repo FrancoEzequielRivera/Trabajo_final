@@ -48,6 +48,7 @@ const sonidos = {
     mostrarBestTimes: new Audio("sounds/mostrarBestTimes.mp3"),
     gameOver: new Audio("sounds/gameOver.mp3"),
     volver: new Audio("sounds/volver.mp3"),
+    sonidoSlider: new Audio("sounds/pruebaSonido.mp3"),
 };
 
 // Asignar volúmenes por defecto
@@ -57,7 +58,22 @@ Object.values(sonidos).forEach(s => {
 Object.values(sonidos.ss).forEach(s => s.volume = volumenEfectos);
 sonidos.menuMusic.volume = volumenMusica;
 sonidos.fgMusic.volume = volumenMusica;
+sonidos.sonidoSlider.volume = volumenEfectos;
 
+function playSliderSound() {
+    if (sonidos && sonidos.sonidoSlider) { 
+        sonidos.sonidoSlider.currentTime = 0;
+        sonidos.fgMusic.pause(); 
+        sonidos.sonidoSlider.play();
+    }
+}
+
+function playSliderMSound() {
+    if (sonidos && sonidos.sonidoSlider) { 
+        sonidos.sonidoSlider.currentTime = 0; 
+        sonidos.fgMusic.play();
+    }
+}
 
 /*#############################################################################################
 -------------------------------------MENU PRINCIPAL --------------------------------------
@@ -73,6 +89,7 @@ function showMenu() {
         screen.style.display = 'none';
     });
     mainMenu.style.display = 'block';
+    sonidos.fgMusic.pause();
     sonidos.volver.play();
 }
 
@@ -464,7 +481,7 @@ function startFlappybird() {
   const pipeSpeed = 2;
   const pipeIntervalFrames = 120;
   const gap = 140;
-  const birdSize = 40;
+  const birdSize = 35;
 
   let bird = { x: 50, y: canvas.height / 2, velocity: 0, width: birdSize, height: birdSize };
   let pipes = [];
@@ -1057,7 +1074,7 @@ function resetSimonButtonStyles() {
     });
     document.getElementById('simon-red').style.backgroundColor = '#FF0000';
     document.getElementById('simon-green').style.backgroundColor = '#00FF00';
-    document.getElementById('simon-blue').style.backgroundColor = '#0000FF';
+    document.getElementById('simon-blue').style.backgroundColor = '#002FFF';
     document.getElementById('simon-yellow').style.backgroundColor = '#FFFF00';
 }
 
