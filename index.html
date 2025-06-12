@@ -138,19 +138,33 @@
         <div id="ppt-game" class="game-screen" style="display: none;">
             <button onclick="showMenu()">🏠 Volver al Menú</button>
             <h2>¡Piedra, Papel o Tijera!</h2>
-            <div class="ppt-options">
-                <button onclick="playppt('piedra')">👊 Piedra</button>
-                <button onclick="playppt('papel')">📄 Papel</button>
-                <button onclick="playppt('tijera')">✂️ Tijera</button>
+            <div id="ppt-options" style="display: flex; gap: 10px; justify-content: center;">
+                <button onclick="playppt('👊')">👊 Piedra</button>
+                <button onclick="playppt('📄')">📄 Papel</button>
+                <button onclick="playppt('✂️')">✂️ Tijera</button>
             </div>
-            <div id="ppt-scoreboard" style="margin-top: 15px; font-family: 'Courier New', monospace; color: #0ff;">
-                🏆 Victorias: <span id="ppt-wins">0</span> |
-                🤝 Empates: <span id="ppt-draws">0</span> |
-                💔 Derrotas: <span id="ppt-losses">0</span>
-            </div>
-            <div class="ppt-result" id="ppt-result"></div>
-            <button onclick="resetpptScoreboard()">🔄 Reiniciar marcador</button>
+            <div id="ppt-replay" style="display: none; text-align: center; margin-top: 20px;">
+                <button onclick="resetpptGame()">🔁 Volver a jugar</button>
         </div>
+
+            <div class="choice-box">
+                <h2>Tu elección</h2>
+                <div id="player-choice" class="emoji-box">❓</div>
+            </div>
+            <div class="choice-box">
+                <h2>CPU</h2>
+                <div id="cpu-choice" class="emoji-box">❓</div>
+
+
+                <div id="ppt-scoreboard" style="margin-top: 15px; font-family: 'Courier New', monospace; color: #0ff;">
+                    🏆 Victorias: <span id="ppt-wins">0</span> |
+                    🤝 Empates: <span id="ppt-draws">0</span> |
+                    💔 Derrotas: <span id="ppt-losses">0</span>
+                </div>
+                <div class="ppt-result" id="ppt-result"></div>
+
+                <button onclick="resetpptScoreboard()">🔄 Reiniciar marcador</button>
+            </div>
 
         <div id="options" class="game-screen" style="display: none;">
             <h1>Opciones</h1>
