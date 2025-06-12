@@ -401,6 +401,131 @@ li.record {
     animation: glow 1s ease-in-out infinite alternate;
 }
 
+@media screen and (max-width: 1024px) {
+    #neon-dice-score {
+        font-size: 0.9em;
+        width: 250px;
+    }
+
+    .dice {
+        width: 48px;
+        height: 48px;
+        font-size: 1.4em;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.9em;
+    }
+
+    #neon-scores-container,
+    #neon-best-score-input-container {
+        width: 90%;
+        max-width: 350px;
+        font-size: 0.95em;
+    }
+
+    #dice-container {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+}
+
+#neon-best-score-input-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: none;
+
+    border: 1px solid #FFD700;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+#neon-best-score-input-container h2 {
+    color: #ffffff;
+    text-shadow: 0 0 8px #FFD700;
+    margin-bottom: 10px;
+}
+
+#neon-best-score-name-input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #FFD700;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+#save-neon-record-btn {
+    margin-top: 10px;
+}
+
+/* Estilos para los mensajes de juego superpuestos (como "Nuevo Récord" o "Game Over") */
+.game-message-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.85);
+    border: 2px solid; /* Borde que cambiará de color */
+    padding: 25px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 25px; /* Sombra que cambiará de color */
+    text-align: center;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    min-width: 280px;
+}
+
+.game-message-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 0 0 8px;
+    margin: 0;
+}
+
+.game-message-button { 
+    background-color: transparent;
+    color: rgb(255, 0, 0); 
+    border: 2px solid rgb(255, 0, 0); 
+    padding: 10px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgb(255, 0, 0);
+}
+
+.game-message-button:hover {
+    background-color: rgb(255, 0, 0);
+    color: #000000;
+    box-shadow: 0 0 20px rgb(255, 0, 0);
+}
+
+/* Estilos específicos para mensajes de "Fin del Juego" (Rojo) */
+.game-message-container.game-over {
+    border-color: #FF0000;
+    box-shadow: 0 0 25px #FF0000;
+}
+.game-message-container.game-over .game-message-text {
+    text-shadow: 0 0 8px #FF0000;
+}
 /*#############################################################################################
 -------------------------------------------SIMON SAYS-------------------------------------
 ###############################################################################################*/
