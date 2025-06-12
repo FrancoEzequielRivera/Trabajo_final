@@ -671,6 +671,19 @@ let diceValues = [0, 0, 0, 0, 0];
 let frozen = [false, false, false, false, false];
 let rollCount = 0;
 let turnEnded = false;
+const MAX_NEON_SCORES = 5;
+const ndMessageContainer = document.getElementById('nd-message-container');
+const ndMessageText = document.getElementById('nd-message-text');
+const ndMessageCloseBtn = document.getElementById('nd-message-close-btn');
+
+// Listener para el botón de cerrar el mensaje flotante
+if (ndMessageCloseBtn) {
+    ndMessageCloseBtn.addEventListener('click', () => {
+        sonidos.volver.play(); 
+        ndMessageContainer.style.display = 'none';
+        resetGame(); 
+    });
+}
 
 function rollDice() {
     sonidos.ndGiro.currentTime = 0;
@@ -728,6 +741,45 @@ function toggleFreeze(index) {
     document.getElementById(`d${i + 1}`).addEventListener("click", () => toggleFreeze(i));
 });
 
+function handleNewNeonScore(score) {
+    const container = document.getElementById('neon-best-score-input-container');
+    const input = document.getElementById('neon-best-score-name-input');
+    const saveBtn = document.getElementById('save-neon-record-btn');
+
+    // Asegúrate de que estas variables de los elementos existan.
+    if (!container || !input || !saveBtn) {
+        console.error("Elementos de input de nuevo récord no encontrados.");
+        return;
+    }
+
+    const neonBestScores = JSON.parse(localStorage.getItem("neonBestScores")) || [];
+    const MAX_NEON_SCORES = 5;
+
+    const isNewRecord = score > 0 && (neonBestScores.length < MAX_NEON_SCORES || 
+        (neonBestScores.length > 0 && score > neonBestScores[neonBestScores.length - 1].score));
+
+    if (isNewRecord) {
+        // Si es un nuevo récord, solo muestra el input para el nombre
+        container.style.display = 'block';
+        input.value = localStorage.getItem('lastNeonUsername') || "Anónimo";
+        input.focus();
+        saveBtn.onclick = () => {
+            const name = input.value.trim() || "Anónimo";
+            localStorage.setItem('lastNeonUsername', name);
+            saveNeonScore(score, name);
+            container.style.display = 'none';
+            if (ndMessageContainer) {
+                ndMessageContainer.style.display = 'none'; 
+            }
+            showNeonScores();
+        };
+    } else {
+        // Si NO es un nuevo récord (o si la puntuación es 0), ocultamos el input y el botón de guardar
+        container.style.display = 'none';
+        showNeonGameMessage(`Fin del juego. Puntuación: ${score}`);
+    }
+}
+
 // Permitir hacer clic en una casilla de puntuación
 document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
     td.addEventListener("click", () => {
@@ -745,12 +797,7 @@ document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
         // Si el juego está completo, guardar récord
         if (isNeonDicesGameComplete()) {
             const totalScore = calculateTotalNeonScore();
-            const name = prompt("🎉 ¡Juego completo! Ingresa tu nombre:");
-            if (name) {
-                saveNeonScore(totalScore, name.trim());
-                alert(`Tu puntuación: ${totalScore}`);
-                showNeonScores();
-            }
+            handleNewNeonScore(totalScore);
         }
 
         resetTurn();
@@ -789,7 +836,6 @@ function calculateScore(category) {
         case "póker": return counts.includes(4) ? 40 : 0;
         case "neon dice": return counts.includes(5) ? 50 : 0;
         case "doble neon dice": return counts.includes(5) ? 100 : 0;
-        case "total": return diceValues.reduce((a, b) => a + b, 0);
         default: return 0;
     }
 }
@@ -813,7 +859,7 @@ function isNeonDicesGameComplete() {
         }
     });
 
-    return filled === 11; // Las 11 categorías que no son "Total"
+    return filled === 11;
 }
 
 function calculateTotalNeonScore() {
@@ -826,8 +872,6 @@ function calculateTotalNeonScore() {
     });
     return total;
 }
-
-const MAX_NEON_SCORES = 5;
 
 function saveNeonScore(score, user) {
     let scores = JSON.parse(localStorage.getItem("neonBestScores")) || [];
@@ -897,6 +941,19 @@ function resetGame() {
 
     // Ocultar el panel de récords si está visible
     document.getElementById("neon-scores-container").style.display = "none";
+}
+
+// mostrar el mensaje para el fin del Juego
+function showNeonGameMessage(message) { 
+    if (!ndMessageContainer || !ndMessageText) return; 
+
+    ndMessageText.textContent = message;
+    ndMessageContainer.classList.remove('record'); 
+    ndMessageContainer.classList.add('game-over'); 
+    
+    sonidos.mostrarBestTimes.play(); 
+
+    ndMessageContainer.style.display = 'flex'; 
 }
 
 /*#############################################################################################
