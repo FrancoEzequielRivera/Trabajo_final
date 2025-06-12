@@ -1143,18 +1143,19 @@ let pptLosses = 0;
 
 function playppt(playerChoice) {
 
-    const choices = ["piedra", "papel", "tijera"];
+    const choices = ["👊", "📄", "✂️"];
     const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
     let result = "";
+    let emoji = "";
 
     if (playerChoice === cpuChoice) {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Empate! 🤝`;
         pptDraws++;
         sonidos.pptDraw.play();
     } else if (
-        (playerChoice === "piedra" && cpuChoice === "tijera") ||
-        (playerChoice === "papel" && cpuChoice === "piedra") ||
-        (playerChoice === "tijera" && cpuChoice === "papel")
+        (playerChoice === "👊" && cpuChoice === "✂️") ||
+        (playerChoice === "📄" && cpuChoice === "👊") ||
+        (playerChoice === "✂️" && cpuChoice === "📄")
     ) {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. ¡Ganaste! 🎉`;
         pptWins++;
@@ -1163,10 +1164,15 @@ function playppt(playerChoice) {
         result = `Tú elegiste ${playerChoice}, la CPU eligió ${cpuChoice}. Perdiste 😢`;
         pptLosses++;
         sonidos.pptLose.play();
+
     }
 
+    document.getElementById("player-choice").textContent = playerChoice;
+    document.getElementById("cpu-choice").textContent = cpuChoice;
     document.getElementById("ppt-result").textContent = result;
     updatepptScoreboard();
+    document.getElementById("ppt-options").style.display = "none";
+    document.getElementById("ppt-replay").style.display = "block";
 }
 
 function updatepptScoreboard() {
@@ -1174,6 +1180,16 @@ function updatepptScoreboard() {
     document.getElementById("ppt-draws").textContent = pptDraws;
     document.getElementById("ppt-losses").textContent = pptLosses;
 }
+
+function resetpptGame() {
+    document.getElementById("player-choice").textContent = "❓";
+    document.getElementById("cpu-choice").textContent = "❓";
+    document.getElementById("ppt-result").textContent = "";
+    document.getElementById("ppt-options").style.display = "flex";
+    document.getElementById("ppt-replay").style.display = "none";
+    sonidos.volver.play();
+}
+
 function resetpptScoreboard() {
     sonidos.volver.play();
     pptWins = 0;
