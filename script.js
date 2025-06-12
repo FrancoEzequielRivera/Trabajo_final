@@ -726,10 +726,7 @@ if (ndMessageCloseBtn) {
 }
 
 function rollDice() {
-    sonidos.ndGiro.currentTime = 0;
-    sonidos.ndGiro.play();
     if (rollCount >= 3 || turnEnded) {
-        alert("¡Debes elegir una casilla antes de continuar!");
         return;
     }
 
@@ -752,9 +749,10 @@ function rollDice() {
         }, 50);
     });
 
+    sonidos.ndGiro.currentTime = 0;
+    sonidos.ndGiro.play();
     rollCount++;
     if (rollCount === 3) {
-        alert("Último tiro. Debes elegir una casilla.");
     }
 }
 
@@ -826,7 +824,6 @@ document.querySelectorAll("#neon-dice-score td:nth-child(2)").forEach(td => {
         if (turnEnded) return;
 
         if (td.textContent !== "") {
-            alert("Esta casilla ya está usada.");
             return;
         }
         sonidos.ndAnotar.play()
