@@ -672,9 +672,31 @@ function startFlappybird() {
     }
   }
 
-  function draw() {
-    ctx.fillStyle = "#000000"; // fondo negro
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const stars = [];
+    for (let i = 0; i < 100; i++) {
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 1.5,
+            speed: 0.2 + Math.random() * 0.8 // Velocidad individual
+        });
+    }
+
+    function draw() {
+        // Fondo espacial estático
+        ctx.fillStyle = "#000033";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Dibuja estrellas moviéndose
+        ctx.fillStyle = "white";
+        stars.forEach(star => {
+            star.x -= star.speed; // Mueve cada estrella
+            if (star.x < 0) { // Reinicia posición al llegar al borde
+                star.x = canvas.width;
+                star.y = Math.random() * canvas.height;
+            }
+            ctx.fillRect(star.x, star.y, star.size, star.size);
+        });
 
     drawBird();
     drawPipes();
