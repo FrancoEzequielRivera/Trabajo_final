@@ -100,8 +100,22 @@ menuOptions.forEach(option => {
         const target = option.getAttribute('data-target');
         showScreen(target);
     });
-    option.addEventListener('mouseover', () => {
-        sonidos.menuHover.play();
+
+   let hoverSoundActual = null;
+   option.addEventListener('mouseenter', () => {
+        // Detener sonido anterior
+        if (hoverSoundActual) {
+            hoverSoundActual.pause();
+            hoverSoundActual.currentTime = 0;
+        }
+
+        // Reproducir nuevo sonido
+        const nuevoSonido = new Audio("sounds/menu-alPasarPorTexto.mp3");
+        nuevoSonido.volume = volumenEfectos;
+        nuevoSonido.play();
+
+        // Guardar el actual
+        hoverSoundActual = nuevoSonido;
     });
 });
 
