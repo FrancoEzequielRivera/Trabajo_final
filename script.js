@@ -486,7 +486,14 @@ function toggleBestTimes() {
 -------------------------------------FLAPPY GRAFFITI--------------------------------------
 ###############################################################################################*/
 
+let flappyGameActive = false;
+
 function startFlappybird() {
+
+  // Evitar múltiples instancias
+  if (flappyGameActive) return;
+  flappyGameActive = true;
+
   const birdImage = new Image();
   birdImage.src = "images/fg-flappy.png";
 
@@ -537,6 +544,8 @@ function startFlappybird() {
     musicaFondoFlappy.pause();
     musicaFondoFlappy.currentTime = 0;
     draw(); // Dibuja el estado inicial (pájaro quieto)
+
+    flappyGameActive = true;
   }
 
   function drawBird() {
@@ -681,7 +690,10 @@ function startFlappybird() {
   }
 
   function endGame() {
+    
     gameOver = true;
+    flappyGameActive = false;
+
     cancelAnimationFrame(animationFrameId); // Detiene el bucle de animación
     animationFrameId = null; // Asegura que no haya ID de animación activa
 
