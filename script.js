@@ -249,7 +249,7 @@ let board = [];
 let revealedCount = 0;
 let gameOver = false;
 // variables para el temporizador
-let timerInterval;
+let timerInterval = null;
 let seconds = 0;
 // variables para calcular los mejores tiempos
 const MAX_BEST_TIMES = 5;
@@ -270,6 +270,8 @@ function initBuscaminas() {
     revealedCount = 0;
     gameOver = false;
     document.getElementById("game-status").textContent = "";
+
+    stopTimer();
 
     // Inicializar celdas
     for (let r = 0; r < rows; r++) {
@@ -384,6 +386,7 @@ function getNeighbors(r, c) {
 }
 
 function startTimer() {
+    stopTimer();
     timerInterval = setInterval(() => {
     seconds++;
     updateTimerDisplay();
@@ -391,7 +394,10 @@ function startTimer() {
 }
   
 function stopTimer() {
-    clearInterval(timerInterval);
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
 }
    
 function updateTimerDisplay() {
