@@ -684,7 +684,7 @@ function startFlappybird() {
 
     function draw() {
         // Fondo espacial estático
-        ctx.fillStyle = "#000033";
+        ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Dibuja estrellas moviéndose
